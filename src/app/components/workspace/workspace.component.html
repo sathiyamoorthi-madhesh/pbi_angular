@@ -1,0 +1,280 @@
+<div class="max-w-4xl mx-auto">
+  
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-20">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+    <p class="mt-4 text-gray-600">Loading workspace...</p>
+  </div>
+  
+  <!-- Selection Window -->
+  <div *ngIf="!selectedFolder && !isLoading">
+    <!-- Header/Description -->
+    <h2 class="text-3xl font-extrabold text-gray-800 mb-2">
+      <i class="fas fa-folder-open text-teal-600 mr-2"></i> Select a Workspace
+    </h2>
+    <p class="text-gray-500 mb-8 border-b pb-4">
+      Choose a folder to view its contents, or create a new one to organize your reports.
+    </p>
+
+    <!-- Controls: New Folder & Search -->
+    <div class="flex justify-between items-center mb-6">
+      <!-- New Folder Button (Teal Primary Style) -->
+      <button 
+        class="px-5 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow-md shadow-teal-700/30 hover:bg-teal-500 transition duration-200 transform hover:scale-[1.01] active:scale-[0.99]"
+        (click)="toggleCreateFolder()"
+      >
+        <i class="fas fa-folder-plus mr-2"></i> New Folder
+      </button>
+      
+      <!-- Search Input -->
+      <div class="relative w-72">
+        <input 
+          type="text" 
+          placeholder="Search folders..." 
+          [(ngModel)]="searchQuery"
+          (input)="searchFolders()"
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition duration-150"
+        >
+        <i class="fas fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+    </div>
+
+    <!-- Create Folder Form -->
+    <div 
+      *ngIf="isCreatingFolder"
+      class="mb-6 p-4 bg-teal-50 border border-teal-200 rounded-lg"
+    >
+      <div class="flex items-center gap-4">
+        <input
+          type="text"
+          [(ngModel)]="newFolderName"
+          placeholder="Enter folder name..."
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+          (keyup.enter)="addFolder()"
+          (keyup.escape)="cancelCreateFolder()"
+          maxlength="50"
+        />
+        <button 
+          class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition duration-150"
+          (click)="addFolder()" 
+          [disabled]="!newFolderName.trim()"
+        >
+          <i class="fas fa-check mr-1"></i> Create
+        </button>
+        <button 
+          class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-150"
+          (click)="cancelCreateFolder()"
+        >
+          <i class="fas fa-times mr-1"></i> Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Folder List -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 divide-y divide-gray-100">
+      
+      <!-- Header Row -->
+      <div class="flex justify-between items-center p-4 text-sm font-semibold text-gray-500 border-b border-gray-200 rounded-t-xl bg-gray-50">
+        <span class="w-1/2">Folder Name</span>
+        <span class="w-1/4 text-right">Details</span>
+        <span class="w-1/8 text-right">Actions</span>
+      </div>
+
+      <!-- Individual Folder Items -->
+      <div
+        *ngFor="let folder of filteredFolders"
+        class="flex justify-between items-center p-4 hover:bg-teal-50 transition duration-150 cursor-pointer"
+        (click)="openFolder(folder)"
+      >
+        <div class="flex items-center space-x-4 w-1/2">
+          <i class="fas fa-folder-closed text-2xl text-teal-600"></i>
+          <span class="text-lg font-medium text-gray-800">{{ folder.name }}</span>
+        </div>
+        
+        <div class="w-1/4 text-right text-sm text-gray-500">
+          <span class="font-normal">{{ getFolderStats(folder) }} - </span> {{ formatDate(folder.createdAt) }}
+        </div>
+        
+        <div class="w-1/8 flex justify-end">
+          <button 
+            class="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition duration-150" 
+            title="Delete Folder"
+            (click)="deleteFolder(folder.id, folder); $event.stopPropagation()"
+          >
+            <i class="fas fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Empty State -->
+      <div *ngIf="filteredFolders.length === 0" class="p-8 text-center">
+        <i class="fas fa-folder-open text-4xl text-gray-300 mb-4"></i>
+        <h3 class="text-lg font-medium text-gray-500 mb-2">No folders found</h3>
+        <p class="text-gray-400">Create your first folder to get started</p>
+      </div>
+
+    </div>
+    
+    <!-- Footer placeholder -->
+    <div class="mt-8 text-center text-gray-400 text-sm">
+      End of Workspaces list.
+    </div>
+
+  </div>
+
+  <!-- Selected Folder Window -->
+  <div *ngIf="selectedFolder && !isLoading">
+    <!-- Folder Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center space-x-4">
+        <button 
+          class="p-2 text-gray-600 hover:text-teal-600 transition duration-150"
+          (click)="closeFolder()"
+        >
+          <i class="fas fa-arrow-left text-xl"></i>
+        </button>
+        <div>
+          <h2 class="text-3xl font-extrabold text-gray-800">
+            <i class="fas fa-folder-open text-teal-600 mr-2"></i> {{ selectedFolder.name }}
+          </h2>
+          <p class="text-gray-500">
+            {{ selectedFolder.files.length }} file(s) • Created {{ formatDate(selectedFolder.createdAt) }}
+          </p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- File Search -->
+        <div class="relative w-64">
+          <input 
+            type="text" 
+            placeholder="Search files..." 
+            [(ngModel)]="searchQuery"
+            (input)="searchFiles()"
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition duration-150"
+          >
+          <i class="fas fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+        
+        <button 
+          class="px-5 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow-md shadow-teal-700/30 hover:bg-teal-500 transition duration-200 transform hover:scale-[1.01] active:scale-[0.99]"
+          (click)="openCreateFile()"
+        >
+          <i class="fas fa-plus mr-2"></i> Create File
+        </button>
+      </div>
+    </div>
+    
+    <!-- File List -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 divide-y divide-gray-100">
+      
+      <!-- Header Row -->
+      <div class="flex justify-between items-center p-4 text-sm font-semibold text-gray-500 border-b border-gray-200 rounded-t-xl bg-gray-50">
+        <span class="w-1/2">File Name</span>
+        <span class="w-1/4 text-right">Type</span>
+        <span class="w-1/8 text-right">Actions</span>
+      </div>
+
+      <!-- Individual File Items -->
+      <div
+        *ngFor="let file of filteredfiles"
+        class="flex justify-between items-center p-4 hover:bg-teal-50 transition duration-150 cursor-pointer"
+        (click)="onNameEmit(file.name)"
+      >
+        <div class="flex items-center space-x-4 w-1/2">
+          <i class="fas fa-file text-2xl text-teal-600"></i>
+          <span class="text-lg font-medium text-gray-800">{{ file.name }}</span>
+        </div>
+        
+        <div class="w-1/4 text-right text-sm text-gray-500">
+          {{ getFileTypeDisplay(file.type) }}
+        </div>
+        
+        <div class="w-1/8 flex justify-end">
+          <button
+            class="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition duration-150"
+            title="Delete File"
+            (click)="deleteFolderFile(selectedFolder.id, file.name); $event.stopPropagation()"
+          >
+            <i class="fas fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Empty State -->
+      <div *ngIf="filteredfiles.length === 0" class="p-8 text-center">
+        <i class="fas fa-file text-4xl text-gray-300 mb-4"></i>
+        <h3 class="text-lg font-medium text-gray-500 mb-2">No files found</h3>
+        <p class="text-gray-400">Create your first file or try adjusting your search</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Create File Modal -->
+  <div 
+    *ngIf="showCreateForm" 
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    (click)="closeCreateForm()"
+  >
+    <div 
+      class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="text-center mb-6">
+        <div class="mx-auto w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+          <i class="fas fa-file-plus text-teal-600 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900">Create New File</h3>
+        <p class="text-gray-500 mt-2">Add a new file to your workspace</p>
+      </div>
+
+      <form (ngSubmit)="createFile()" class="space-y-4">
+        <div>
+          <label for="fileName" class="block text-sm font-medium text-gray-700 mb-2">File Name</label>
+          <input 
+            id="fileName" 
+            [(ngModel)]="newFile.name" 
+            name="fileName" 
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+            placeholder="Enter file name..."
+          />
+        </div>
+
+        <div>
+          <label for="fileType" class="block text-sm font-medium text-gray-700 mb-2">File Type</label>
+          <select 
+            id="fileType" 
+            [(ngModel)]="newFile.type" 
+            name="fileType" 
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+          >
+            <option value="report">📊 Report - Data analysis and insights</option>
+            <option value="dashboard">📈 Dashboard - Interactive data visualization</option>
+            <option value="dataset">💾 Dataset - Raw data storage</option>
+            <option value="dataflow">🔄 Dataflow - Data processing pipeline</option>
+          </select>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button 
+            type="submit" 
+            class="flex-1 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition duration-150"
+          >
+            <i class="fas fa-check mr-1"></i> Create File
+          </button>
+          <button 
+            type="button" 
+            class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-150"
+            (click)="closeCreateForm()"
+          >
+            <i class="fas fa-times mr-1"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
