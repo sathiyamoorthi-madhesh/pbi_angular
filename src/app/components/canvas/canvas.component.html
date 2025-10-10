@@ -255,7 +255,7 @@
                         <div class="flex items-center justify-between mb-5">
                             <h2 class="text-xl font-bold text-gray-800 tracking-wider">Visualizations</h2>
                             <i class="fa-solid fa-chart-line text-teal-600"></i>
-                        </div>
+                                </div>
 
                         <!-- Tabs/Pill Navigation -->
                         <div class="flex space-x-1 p-1 bg-gray-100 rounded-lg mb-6">
@@ -268,7 +268,7 @@
                             <button class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
                                 Layouts
                             </button>
-                        </div>
+                            </div>
 
                         <!-- Chart Icon Grid -->
                         <div class="grid grid-cols-4 gap-3">
@@ -282,7 +282,7 @@
                                     }">
                                 <span class="material-icons text-xl">{{ icon.icon }}</span>
                                 
-                            </button>
+                                        </button>
                         </div>
 
                         
@@ -298,42 +298,42 @@
                                     <div *ngFor="let field of selectedChart?.fields" class="mb-4">
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">{{ getFieldLabel(field) }}:</label>
                                         <mat-form-field appearance="outline" class="w-full">
-                                            <mat-select [(ngModel)]="chartFieldValues[field]" multiple
-                                                       (ngModelChange)="onFieldChange(field)">
-                                                <mat-option *ngFor="let visibleField of visibleFieldList"
-                                                           [value]="visibleField"
-                                                           [disabled]="isOptionDisabled(field, visibleField)">
-                                                    {{ visibleField }}
-                                                </mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
+                                                        <mat-select [(ngModel)]="chartFieldValues[field]" multiple
+                                                            (ngModelChange)="onFieldChange(field)">
+                                                            <mat-option *ngFor="let visibleField of visibleFieldList"
+                                                                [value]="visibleField"
+                                                                [disabled]="isOptionDisabled(field, visibleField)">
+                                                                {{ visibleField }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
 
-                                    <ng-container *ngIf="selectedChart?.aggregates">
+                                                <ng-container *ngIf="selectedChart?.aggregates">
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">Aggregation:</label>
-                                        <select [(ngModel)]="selectedAggregation" 
+                                                    <select [(ngModel)]="selectedAggregation"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                                             <option *ngFor="let agg of allAggregationMethods" [value]="agg">{{ agg }}</option>
-                                        </select>
-                                    </ng-container>
+                                                    </select>
+                                                </ng-container>
                                     
                                     <div class="flex items-center justify-between mt-6">
-                                        <button (click)="fetchChartData(labeltype)"
+                                                    <button (click)="fetchChartData(labeltype)"
                                                 class="flex-1 py-2 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition duration-200 disabled:bg-gray-400"
                                                 [disabled]="!datagetbutton">
-                                            Load Chart
-                                        </button>
+                                                        Load Chart
+                                                    </button>
                                         <div class="ml-3">
                                             <mat-spinner diameter="24" *ngIf="getlodingdata"></mat-spinner>
                                             <mat-spinner *ngIf="dataloadfunction" diameter="28" class="ml-2"></mat-spinner>
                                         </div>
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
                                     </div>
-                                </ng-container>
-                            </ng-container>
-                        </div>
                     </div>
                 </div>
-            </div>
+                                    </div>
             <!-- App Side Panel 2 - Elegant Fields Design -->
             <div class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" id="appSide2Wrapper" 
                  [class.hidden]="!appSide2Visible" *ngIf="OnshowField">
@@ -364,31 +364,31 @@
                                            'text-teal-600': collectionExpanded[collection],
                                            'text-gray-500': !collectionExpanded[collection]
                                        }"></i>
-                                </div>
+            </div>
                                 
                                 <!-- Collection Fields (Dropdown Content) -->
                                 <div *ngIf="collectionExpanded[collection]" 
-                                     class="px-4 pb-3 space-y-1 text-gray-600 text-sm border-t border-teal-100">
-                                    <div cdkDropList [cdkDropListData]="collections[collection]"
-                                         (cdkDropListDropped)="dropField($event, collection)" class="space-y-1">
+                                    class="px-4 pb-3 space-y-1 text-gray-600 text-sm border-t border-teal-100">
+                                        <div cdkDropList [cdkDropListData]="collections[collection]"
+                                        (cdkDropListDropped)="dropField($event, collection)" class="space-y-1">
                                         <div *ngFor="let field of collections[collection]; let isLast = last" 
-                                             class="flex items-center justify-between p-1 rounded hover:bg-teal-100 transition cursor-move"
-                                             cdkDrag>
-                                            <div class="flex items-center">
-                                                <mat-checkbox [checked]="columnVisibility[field]"
-                                                             (change)="toggleColumn(field, $event.checked)"
-                                                             class="mr-2">
-                                                </mat-checkbox>
-                                                <span class="truncate">{{ field }}</span>
+                                            class="flex items-center justify-between p-2 rounded hover:bg-teal-100 transition cursor-move"
+                                                cdkDrag>
+                                            <div class="flex items-center min-w-0 flex-1">
+                                                <input type="checkbox"
+                                                       class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                                                       [checked]="columnVisibility[field]"
+                                                       (change)="toggleColumn(field, $any($event.target).checked)" />
+                                                <span class="block truncate max-w-full" [matTooltip]="field" matTooltipPosition="above">{{ field }}</span>
                                             </div>
-                                            <i class="fa-solid fa-grip-vertical text-gray-400 text-xs"></i>
+                                            <i class="fa-solid fa-grip-vertical text-gray-400 text-xs ml-2 flex-shrink-0"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                        </div>
             </div>
 
         </div>
