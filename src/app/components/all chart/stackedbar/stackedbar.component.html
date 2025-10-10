@@ -1,0 +1,19 @@
+<!-- Chart box only shows when showCharts is false -->
+<div class="example-box"  (click)="handleClick($event)" cdkDrag>
+
+  
+
+  <!-- Close button -->
+  <button class="close-button delete-button" title="Close" (click)="onDeleteFromChild()">×</button>
+
+  <!-- Chart container -->
+  <div class="bar-chart-wrapper" cdkDragHandle>
+    <h3 style="margin: 0px 0px 0px 5px;">
+      Stacked Bar Chart
+    </h3>
+    <div class="chart-body" #chartContainer></div>
+  </div>
+
+  <!-- Optional resize handle -->
+  <div class="resizer"></div>
+</div>

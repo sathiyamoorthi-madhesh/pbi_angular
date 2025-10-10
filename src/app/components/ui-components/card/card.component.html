@@ -1,0 +1,12 @@
+<div class="pbi-card">
+    <div class="pbi-card__header" *ngIf="title">
+      <div class="pbi-card__title" *ngIf="title">{{ title }}</div>
+      <div class="pbi-card__actions">
+        <ng-content select="[card-actions]"></ng-content>
+      </div>
+    </div>
+  
+    <div class="pbi-card__body" [ngClass]="paddingClass">
+      <ng-content></ng-content>
+    </div>
+  </div>

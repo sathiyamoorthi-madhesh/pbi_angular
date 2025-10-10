@@ -1,4 +1,12 @@
-@import "tailwindcss";
+@use "tailwindcss";
+
+
+:root {
+  --panel: 255 255 255;
+  --panel-border: 229 231 235;
+  --text-color: 55 65 81;
+  --accent: 13 148 136;
+}
 
 /* Custom Font for a modern feel */
 html, body { 
@@ -9,18 +17,56 @@ html, body {
   color: #333;
 }
 
-/* Custom scrollbar for elegance (matching the light theme) */
+/* Global Custom scrollbar for elegance (matching the light theme) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #e5e7eb 0%, #d1d5db 100%); /* light gray */
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #d1d5db 0%, #9ca3af 100%); /* slightly darker on hover */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* hide track background */
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox scrollbar styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent; /* light gray thumb, transparent track */
+}
+
+/* Custom scrollbar for specific elements */
 .custom-scroll::-webkit-scrollbar {
   width: 6px;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: #a1a1aa; /* slate-400 */
-  border-radius: 3px;
+  background: linear-gradient(180deg, #e5e7eb 0%, #d1d5db 100%);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #d1d5db 0%, #9ca3af 100%);
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-  background-color: transparent;
+  background-color: transparent; /* hide track */
 }
 
 /* Professional selection styling */

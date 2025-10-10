@@ -406,7 +406,7 @@ export class WorkspaceComponent implements OnInit {
     this.coreService.sendData(data);
     const formattedData = '';
     this.coreService.Onpostrelationdata(formattedData);
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/canvas']);
   }
 
   formatDate(date: any): string {

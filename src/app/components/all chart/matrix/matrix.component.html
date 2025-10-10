@@ -1,0 +1,34 @@
+<div class="matrix-container" #tableContainer>
+  <button (click)="exportToExcel()">Export to Excel</button>
+
+  <table class="matrix-table" cdkDragHandle>
+    <thead>
+      <tr>
+        <th *ngFor="let rowField of MatrixTable_row">{{ rowField }}</th>
+        <th *ngFor="let header of columnHeaders" (click)="sortData(header.key)">
+          {{ header.display }}
+          <span *ngIf="sortColumn === header.key">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th *ngIf="showRowTotals">Row Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of aggregatedData">
+        <td *ngFor="let rowField of MatrixTable_row">{{ row[rowField] }}</td>
+        <td *ngFor="let header of columnHeaders">{{ row[header.key] }}</td>
+        <td *ngIf="showRowTotals">{{ row[rowTotalKey] }}</td>
+      </tr>
+    </tbody>
+
+    <tfoot *ngIf="showColumnTotals">
+      <tr>
+        <td [attr.colspan]="MatrixTable_row.length">Column Totals</td>
+        <td *ngFor="let header of columnHeaders">{{ columnTotals[header.key] | number:'1.2-2' }}</td>
+        <td *ngIf="showRowTotals">{{ grandTotal | number:'1.2-2' }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

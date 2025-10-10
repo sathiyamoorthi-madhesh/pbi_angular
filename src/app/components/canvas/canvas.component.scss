@@ -1,0 +1,1125 @@
+/* Import Inter font for modern feel */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    background-color: #f8f8f8;
+}
+
+/* Custom scrollbar for elegance */
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background-color: #2dd4bf; /* teal-400 */
+    border-radius: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+  
+  .wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+  }
+  
+  .main-content-area {
+    flex-grow: 1;
+    width: 100%;
+    background-color: #fff;
+    border-right: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .app-layout-70-15-15 {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    // margin-top: -7px;
+    gap: 10px;
+    align-items: stretch;
+    // padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .app-main-70 {
+    flex: 7;
+    width: 70%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: flex 0.3s ease, width 0.3s ease;
+  }
+  
+  // /* New wrapper for App Side panels, containing the button and the panel content */
+  // .app-side-panel-wrapper {
+  //   // display: flex; /* Arrange button and panel content */
+  //   flex-direction: row; /* Button and panel side-by-side */
+  //   position: relative; /* For button positioning */
+  //   flex-basis: 15%; /* Initial flex-basis for 15% width */
+  //   flex-grow: 0; /* Don't grow beyond 15% */
+  //   flex-shrink: 0; /* Don't shrink below 15% */
+  //   transition: flex-basis 0.3s ease, padding 0.3s ease; /* Transition flex-basis */
+  //   overflow: auto; /* Hide content when collapsed */
+  //   background-color: #e0ffe6; /* Background for the wrapper */
+  //   border-radius: 8px; /* Match panel border-radius */
+  //   box-sizing: border-box;
+  //   padding-left: 35px; /* Space for the button when panel is open */
+  //   min-width: 20px; /* Ensure it's never smaller than the button */
+  // }
+  
+  /* Class for hidden app side panel wrapper */
+  .app-side-panel-wrapper.hidden-wrapper {
+    flex-basis: 20px;
+    /* Only show the button's width */
+    padding-left: 0;
+    /* Remove padding when collapsed */
+  }
+  
+  .app-side-15 {
+    flex-grow: 1;
+    /* Take remaining space in wrapper */
+    width: 100%;
+    /* Take 100% of its wrapper's content area (conceptually) */
+    padding: 15px;
+    /* Keep padding for content inside */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-shrink: 0;
+    /* Prevent shrinking */
+    overflow: auto;
+    /* Allow scrolling if content overflows */
+    transition: opacity 0.3s ease 0.1s, visibility 0.3s ease 0.1s;
+    /* Smooth transition for panel content */
+  }
+  
+  /* Hide content of the app-side-15 when its wrapper is hidden */
+  .app-side-panel-wrapper.hidden-wrapper .app-side-15 {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    /* Disable interaction */
+    padding: 0;
+    /* Ensure padding is removed for content */
+  }
+
+  
+  
+  /* Tab specific styles - now nested inside .app-main-70 */
+  .tab-content {
+    padding: 0;
+    /* Reset padding as .app-main-70 has padding */
+    background-color: #fff;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    flex-grow: 1;
+    /* Allows tab content to take available height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    /* Enable scrolling for tab content if it overflows */
+    border-radius: 5px;
+  }
+  
+  .tabs {
+    display: flex;
+    background-color: #f1f1f1;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: auto;
+    /* Enable horizontal scrolling for tabs if they overflow */
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* Prevent tabs bar from shrinking */
+    margin-top: 10px;
+    /* Space between tab content and tab bar */
+    border-radius: 5px;
+  }
+  
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    /* Prevent individual tabs from shrinking */
+  }
+  
+  .tab.active {
+    background-color: #fff;
+    border-top: 2px solid #007bff;
+  }
+  
+  .tab .close-btn {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    color: #888;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    /* Adjust size for better fit */
+    padding: 0 3px;
+  }
+  
+  .tab.add-tab {
+    font-weight: bold;
+    font-size: 20px;
+    padding: 10px 15px;
+    color: #007bff;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  /* Styles for the new toggle buttons within App Side panels */
+  .toggle-app-side-btn {
+    position: absolute;
+    /* Relative to .app-side-panel-wrapper */
+    top: 5px;
+    left: 5px;
+    /* Fixed to top-left of its wrapper */
+    z-index: 2;
+    /* Ensure button is above panel content */
+    background: #0D9488;
+    /* Slightly transparent blue */
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    /* Default padding */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, left 0.3s ease, border-radius 0.3s ease;
+    /* Added left and border-radius to transition */
+    height: 28px;
+    /* Fixed height for consistency */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .toggle-app-side-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style for the internal toggle button when its panel is hidden */
+  .app-side-panel-wrapper.hidden-wrapper .toggle-app-side-btn {
+    left: 0;
+    /* Move button to the left edge of the 20px wrapper */
+    width: 20px;
+    /* Fixed width when side panel is hidden */
+    padding: 4px 0;
+    /* Adjust padding to center '>' */
+    border-radius: 0 4px 4px 0;
+    /* Rounded on right side only when collapsed */
+  }
+  
+  ::ng-deep .pageWrapper.maxWidth {
+    max-width: 100% !important;
+  }
+  
+  ::ng-deep .mat-mdc-tab-body-content {
+    height: 100%;
+    overflow: hidden;
+    transform: none;
+    visibility: hidden;
+  }
+  
+  .column-visual-toggle {
+    // border-left: 1px solid #ccc;
+    // background-color: #ececec;
+    width: 100%;
+    margin-left: -8px;
+    margin-top: 20px;
+    padding: 15px;
+  }
+  
+  .app-side-panel-wrapper {
+    background-color: var(--side-panel-bg);
+    border-right: 1px solid var(--side-panel-border);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 11px;
+    height: 100%;
+    transition: flex-basis 0.3s ease, min-width 0.3s ease;
+    overflow-y: auto;
+    /* Custom scrollbar will be applied globally */
+  }
+  
+  /* Style for the collapsed panel */
+  .app-side-panel-wrapper.hidden-wrapper {
+    flex-basis: 30px !important;
+    min-width: 20px;
+  }
+  
+  /* -------------------- Toggle Button -------------------- */
+  // .toggle-app-side-btn {
+  //   position: absolute;
+  //   top: 50%;
+  //   right: -15px; /* Position it outside the panel */
+  //   transform: translateY(-50%);
+  //   width: 30px;
+  //   height: 30px;
+  //   border-radius: 50%;
+  //   border: none;
+  //   background-color: var(--toggle-btn-bg);
+  //   color: var(--text-color);
+  //   font-size: 1.2rem;
+  //   line-height: 1;
+  //   cursor: pointer;
+  //   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   transition: background-color 0.2s ease, transform 0.2s ease;
+  //   z-index: 100;
+  // }
+  
+  // .toggle-app-side-btn:hover {
+  //   background-color: var(--toggle-btn-hover);
+  //   transform: translateY(-50%) scale(1.1);
+  // }
+  
+  /* -------------------- Collection Blocks -------------------- */
+  // .collection-block {
+  //   padding: 0.5rem 1rem;
+  // }
+  
+  .collection-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 600;
+    // padding: 0.5rem 0;
+    margin: -10px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--side-panel-border);
+    transition: background-color 0.2s ease;
+  }
+  
+  .collection-title:hover {
+    background-color: var(--collection-title-hover);
+    border-radius: var(--rounded-corners);
+  }
+  
+  .collection-title span {
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+  
+  /* Rotate the arrow icon when the collection is expanded */
+  .collection-title .expanded-arrow {
+    transform: rotate(180deg);
+  }
+    .notabdata{
+      color: #ccc;
+      font-size: 65px;
+      text-align: center;
+      margin-top: 35%;
+  
+    }
+  /* -------------------- Field List (Drag & Drop) -------------------- */
+  // .field-list-wrapper {
+  //   padding-left: 1rem;
+  //   padding-top: 0.5rem;
+  // }
+  
+  // .field-list {
+  //   min-height: 20px;
+  //   /* Ensure drop area is visible when empty */
+  //   display: block;
+  // }
+  
+  // .field-item {
+  //   display: flex;
+  //   align-items: center;
+  //   // padding: 0.5rem 0;
+  //   cursor: grab;
+  //   transition: background-color 0.2s ease;
+  //   border-radius: var(--rounded-corners);
+  // }
+  
+  // .field-item:hover {
+  //   background-color: var(--collection-title-hover);
+  // }
+  
+  // /* Style for the Angular Material Checkbox (assuming it's used) */
+  // .field-item mat-checkbox {
+  //   color: var(--text-color);
+  // }
+  
+  /* -------------------- Angular CDK Drag-and-Drop Styles -------------------- */
+  /* Drag-and-drop preview element */
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: var(--rounded-corners);
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+      0 8px 10px 1px rgba(0, 0, 0, 0.14),
+      0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    background: var(--drag-preview-bg);
+    // padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    color: var(--text-color);
+  }
+  
+  /* Drag-and-drop placeholder element */
+  .cdk-drag-placeholder {
+    opacity: 0.5;
+    background: var(--drag-placeholder-bg);
+    border: dashed 2px var(--toggle-btn-hover);
+    border-radius: var(--rounded-corners);
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    // padding: 0.5rem;
+    margin: 0;
+  }
+  
+  /* The element being dragged */
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  /* Ensure the list animates when re-ordering */
+  // .field-list.cdk-drop-list-dragging .field-item:not(.cdk-drag-placeholder) {
+  //   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  // }
+  
+  .select-Filed {
+    margin-left: 10px;
+    margin-top: 60px;
+    margin-left: 30px;
+  }
+  
+  /*
+   * General styling for the component's container.
+   * This sets a background, padding, and border-radius for a modern, card-like appearance.
+   */
+  .mat-tab-group {
+    margin: 20px auto;
+    max-width: 600px;
+    background-color: #f7f9fc;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /*
+   * Styles for the tab content area.
+   */
+  .mat-tab-body-content {
+    padding: 20px;
+  }
+  
+  /*
+   * Styles for the grid of chart icons.
+   * This uses CSS Grid for a flexible and responsive layout.
+   */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    /* gap: 15px; */
+    margin-left: 15px;
+    margin-top: 11px;
+    /* margin-bottom: 24px; */
+    justify-items: center;
+    align-items: center;
+  }
+  
+  /*
+   * Base styles for the chart icon buttons.
+   */
+  .icon-btn {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    // background-color: #e0e0e0;
+    border: 2px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /*
+   * Hover effect for the icon buttons.
+   */
+  .icon-btn:hover:not(:disabled) {
+    background-color: #d0d0d0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /*
+   * Styles for the disabled state of the buttons.
+   */
+  .icon-btn:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  /*
+   * Styles for the currently selected chart icon.
+   */
+  .icon-btn.selected {
+    background-color: #ffffff;
+    border-color: #3f51b5;
+    /* A primary blue color */
+    box-shadow: 0 4px 8px rgba(63, 81, 181, 0.2);
+  }
+  
+  /*
+   * Styles for active charts, indicated by a green color.
+   */
+  .icon-btn.active-green {
+    background-color: #4caf50;
+    /* A vibrant green */
+    color: white;
+    border-color: #388e3c;
+  }
+  
+  /*
+   * Styles for the material icons inside the buttons.
+   */
+  .material-icons {
+    // font-size: 28px;
+    color: #555;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  /*
+   * Adjust icon color for active and selected states.
+   */
+  .icon-btn.selected .material-icons {
+    color: #3f51b5;
+  }
+  
+  .icon-btn.active-green .material-icons {
+    color: white;
+  }
+  
+  /*
+   * Styles for the chart field selection section.
+   */
+  .selectaxis {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+  }
+  
+  /*
+   * General styles for form fields and labels.
+   */
+  h3 {
+    color: #333;
+    margin: 0 0 10px;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 10px 0 20px;
+  }
+  
+  label {
+    font-weight: bold;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  /*
+   * Styles for the mat-form-field and select elements.
+   */
+  .chart-mode-select {
+    width: 100%;
+  }
+  
+  .chart-mode-selects {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  /*
+   * Styles for the "Load Chart" button.
+   */
+  .load-chart-button {
+    background: #0D9488;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 20px;
+  }
+  
+  .load-chart-button:hover:not(:disabled) {
+    background-color: #303f9f;
+  }
+  
+  .load-chart-button:disabled {
+    background-color: #b0c4de;
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
+  /*
+   * Styles for the filled "Load Chart" button.
+   */
+  .load-chart-button-filled {
+    background: #0D9488;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .load-chart-button-filled:hover:not(:disabled) {
+    background-color: #0a7a6f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .load-chart-button-filled:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /*
+   * Container for the button and spinner.
+   */
+  .selectaxis>div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  /*
+   * Small spinner styles for alignment.
+   */
+  .small-spinner {
+    margin-top: 20px;
+  }
+  
+  /*
+   * Styles for the second tab's "Fetch Data" button.
+   */
+  .mat-tab-body .load-chart-button {
+    margin-top: 20px;
+  }
+  
+  /*
+   * Responsive design adjustments for smaller screens.
+   */
+  @media (max-width: 600px) {
+    .mat-tab-group {
+      padding: 10px;
+    }
+  
+    .icon-grid {
+      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      gap: 10px;
+    }
+  
+    .icon-btn {
+      width: 50px;
+      height: 50px;
+    }
+  }
+  
+  .field-optionselect {
+    margin-left: 23px;
+  }
+  
+  .Visualizations {
+    margin-left: 20px;
+    margin-top: 15px;
+  }
+  
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .top-form {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+    align-items: center;
+  }
+  
+  .tab-header {
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    background: #f5f5f5;
+    // border-bottom: 1px solid #ccc;
+    // overflow-x: auto;
+  }
+  
+  .tab-header button {
+    padding: 6px 12px;
+    background: #ddd;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .tab-header button.active {
+    background: #0D9488;
+    color: white;
+  }
+  
+  .tab-header .close {
+    color: red;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  .tab-body {
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 4px 8px rgba(63, 81, 181, 0.2);
+    border-radius: 6px;
+    overflow: auto;
+    /* Custom scrollbar will be applied globally */
+  }
+  
+  .content-edit {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 100px;
+    margin-top: 10px;
+  }
+  
+  .chart-container {
+    display: flex;
+    flex-wrap: wrap; // allow items to wrap to next line
+    gap: 16px; // space between items
+    justify-content: flex-start;
+  }
+  
+  .chart-container>* {
+    flex: 1 1 calc(50% - 16px); // try to fit 2 charts per row
+    min-width: 300px; // fallback to vertical stack on small screens
+  }
+  
+  // Optional bar chart placeholder
+  .bar-chart-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .top-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .top-form button {
+    padding: 8px 12px;
+    border: none;
+    background: #0D9488;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .top-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .top-form label {
+    font-size: 14px;
+    margin-left: 10px;
+  }
+  
+  
+  .collection-block {
+    background-color: #ffffff;
+    /* White background for a clean look */
+    border: 1px solid #e0e0e0;
+    /* Light gray border */
+    border-radius: 8px;
+    /* Rounded corners */
+    margin-bottom: 1rem;
+    /* Space between collection blocks */
+    padding: 0;
+    /* Remove default padding */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    /* Subtle shadow for depth */
+    transition: box-shadow 0.2s ease-in-out;
+    /* Smooth transition for hover effect */
+  }
+  
+  /* Hover effect on the collection block */
+  .collection-block:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Lighter shadow on hover */
+  }
+  
+  /* The collection title styling */
+  .collection-title {
+    display: flex;
+    /* Use flexbox for alignment */
+    justify-content: space-between;
+    /* Space out the title and the arrow */
+    align-items: center;
+    /* Vertically center the items */
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    /* Indicate it's clickable */
+    padding: 10px;
+    /* Padding inside the title */
+    margin: 0;
+    /* Remove default margin */
+    color: #333;
+    /* Dark gray text */
+    user-select: none;
+    /* Prevent text selection on click */
+  }
+  
+  /* The horizontal rule (line) below the title */
+  .collection-title hr {
+    flex-grow: 1;
+    /* Allow the line to fill the remaining space */
+    border: none;
+    border-top: 1px solid #f0f0f0;
+    /* Very light gray line */
+    margin: 0 1rem;
+    /* Spacing between the title and the line */
+  }
+  
+  /* The toggle icon (▶/▼) */
+  .collection-title span {
+    font-size: 0.8rem;
+    color: #666;
+    margin-left: 0.5rem;
+    /* Space between the text and the arrow */
+    width: 1em;
+    /* Fixed width to prevent layout shift */
+    text-align: center;
+    /* Center the arrow */
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Wrapper for the list of fields */
+  .field-list-wrapper {
+    overflow: hidden;
+    /* Hide overflow when not expanded */
+    padding: 0 1rem 1rem 1rem;
+    /* Padding for the field list */
+  }
+  
+  /* The actual list of fields (cdkDropList container) */
+  .field-list {
+    min-height: 2rem;
+    /* Ensure a minimum height for drop functionality */
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+  
+  /* Individual field items */
+  .field-item {
+    display: flex;
+    align-items: center;
+    // padding: 0.5rem 0.5rem;
+    // margin-bottom: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    cursor: move;
+    /* Indicate that items are draggable */
+  }
+  
+  /* Style for the field item when dragging */
+  .field-item.dragging {
+    opacity: 0.5;
+    background: #f8f8f8;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* Style for the placeholder when dragging */
+  .field-item.drag-placeholder {
+    opacity: 0.4;
+    background-color: #e0e0e0;
+    border: 1px dashed #999;
+  }
+  
+  /* Hover and active states for field items */
+  .field-item:hover {
+    background-color: #f5f5f5;
+    /* Light gray background on hover */
+  }
+  
+  /* Styling for the checkbox and label */
+  .field-item input[type="checkbox"] {
+    margin-right: 0.5rem;
+  }
+  
+  //  body {
+  //    font-family: sans-serif;
+  //     background-color: #f0f2f5;
+  //     padding: 2rem;
+  // }
+  
+  .main-container {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  
+  
+  .chartSelecst{
+    font-size: 14px;
+      padding: 8px;
+      width: 180px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+  }
+  
+  
+  ::ng-deep .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    background-color: #fff !important;
+    color: #333 !important;           
+  }
+  
+  /* INFO type */
+  ::ng-deep .mat-mdc-snack-bar-container.alert-info .mat-mdc-snackbar-surface {
+    border-left: 5px solid #2196f3; 
+    color: #2196f3 !important;
+  }
+  ::ng-deep .mat-mdc-snack-bar-container.alert-info .mat-mdc-button .mdc-button__label,
+  ::ng-deep .mat-mdc-snack-bar-container.alert-info .mat-mdc-button .mat-icon {
+    background-color: #2196f3 !important;
+  }
+  
+  /* SUCCESS type */
+  ::ng-deep .mat-mdc-snack-bar-container.alert-success .mat-mdc-snackbar-surface {
+    border-left: 5px solid #4caf50; 
+    color: #4caf50 !important;
+  }
+  ::ng-deep .mat-mdc-snack-bar-container.alert-success .mat-mdc-button .mdc-button__label,
+  ::ng-deep .mat-mdc-snack-bar-container.alert-success .mat-mdc-button .mat-icon {
+    background-color: #4caf50 !important;
+  }
+  
+  /* WARNING type */
+  ::ng-deep .mat-mdc-snack-bar-container.alert-warning .mat-mdc-snackbar-surface {
+    border-left: 5px solid #ff9800; 
+    color: #ff9800 !important;
+  }
+  ::ng-deep .mat-mdc-snack-bar-container.alert-warning .mat-mdc-button .mdc-button__label,
+  ::ng-deep .mat-mdc-snack-bar-container.alert-warning .mat-mdc-button .mat-icon {
+    background-color: #ff9800 !important;
+  }
+  
+  /* ERROR type */
+  ::ng-deep .mat-mdc-snack-bar-container.alert-error .mat-mdc-snackbar-surface {
+    border-left: 5px solid #f44336; 
+    color: #f44336 !important;
+  }
+  ::ng-deep .mat-mdc-snack-bar-container.alert-error .mat-mdc-button .mdc-button__label,
+  ::ng-deep .mat-mdc-snack-bar-container.alert-error .mat-mdc-button .mat-icon {
+    background-color: #f44336 !important;
+  }
+  
+  /* Common close button shape + text color */
+  ::ng-deep .mat-mdc-button .mdc-button__label,
+  ::ng-deep .mat-mdc-button .mat-icon {
+    z-index: 1;
+    position: relative;
+    color: #fff !important;
+    padding: 4px;
+    width: 30px;
+    border-radius: 39px;
+  }
+  
+  /* Move snackbar down by 80px */
+  ::ng-deep .alert-margin-top {
+    margin-top: 90px !important;
+  }
+  
+  
+  /* Loading overlay styles are now handled by Tailwind CSS classes */
+  
+  /* Custom scrollbar styles for tab header */
+  .tab-header-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+  
+  .tab-header-scroll::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .tab-header-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 3px;
+  }
+  
+  .tab-header-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #d1d5db 0%, #9ca3af 100%);
+  }
+  
+  .tab-header-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+  }
+  
+  /* Smooth scrolling for tab container */
+  .tab-container {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar for chart containers */
+  .chart-container {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+
+  .chart-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .chart-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .chart-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #d1d5db 0%, #9ca3af 100%);
+  }
+
+  .chart-container::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  /* Custom scrollbar for field lists */
+  .field-list-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+
+  .field-list-wrapper::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .field-list-wrapper::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 2px;
+  }
+
+  .field-list-wrapper::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #d1d5db 0%, #9ca3af 100%);
+  }
+
+  .field-list-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 2px;
+  }
+  /* cancel-button.component.css */
+  .cancel-btn {
+    background-color: red;
+    color: #fff;
+    text-align: center;
+    width: 100px;       /* wider for better UX */
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancel-btn:hover {
+    background-color: darkred; /* hover effect */
+  }
+
+  /* Filled cancel button styles */
+  .cancel-btn-filled {
+    background-color: #dc2626;
+    color: #fff;
+    text-align: center;
+    width: 100px;
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cancel-btn-filled:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .cancel-btn-filled:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  

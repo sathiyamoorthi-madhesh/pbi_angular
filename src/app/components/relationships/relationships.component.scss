@@ -1,0 +1,246 @@
+
+/* Clean and professional animations */
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Relationships container animations */
+.relationships-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Clean hover effects */
+.collection-item,
+.relationship-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.collection-item:hover,
+.relationship-item:hover {
+  transform: translateY(-1px);
+}
+
+/* Button animations */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Input focus effects */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #14b8a6; /* teal-500 */
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Material Design form field overrides */
+::ng-deep .mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex:hover {
+  border-color: #14b8a6;
+}
+
+::ng-deep .mat-form-field-appearance-fill.mat-focused .mat-form-field-flex {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-underline {
+  display: none;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-label {
+  color: #6b7280;
+}
+
+::ng-deep .mat-form-field-appearance-fill.mat-focused .mat-form-field-label {
+  color: #14b8a6;
+}
+
+::ng-deep .mat-select {
+  color: #374151;
+}
+
+::ng-deep .mat-select-arrow {
+  color: #6b7280;
+}
+
+/* Custom scrollbar for elegance */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #a1a1aa; /* slate-400 */
+  border-radius: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .lg\\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .lg\\:col-span-1,
+  .lg\\:col-span-2 {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .max-w-7xl {
+    padding: 0 1rem;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .text-3xl {
+    font-size: 1.875rem;
+  }
+  
+  .p-6 {
+    padding: 1rem;
+  }
+  
+  .space-x-3 > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
+/* Accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Table styling improvements */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  box-shadow: 0 4px 14px 0 rgba(20, 184, 166, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px 0 rgba(20, 184, 166, 0.4);
+}
+
+/* Card shadow enhancements */
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Focus states for better accessibility */
+.focus\\:border-teal-500:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Hover effects for collection items */
+.collection-item:hover {
+  background-color: #f0fdfa;
+  border-color: #14b8a6;
+}
+
+/* Active state for selected collections */
+.collection-item.active {
+  background-color: #f0fdfa;
+  border-color: #14b8a6;
+  color: #0f766e;
+}
+
+/* Disabled state for dropdown buttons */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f3f4f6;
+  color: #9ca3af;
+}
+
+button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Custom dropdown animations */
+.dropdown-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.dropdown-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.dropdown-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}

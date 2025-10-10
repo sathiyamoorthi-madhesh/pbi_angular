@@ -1,0 +1,135 @@
+/* src/app/components/ui-components/slide-menu/slide-menu.component.scss */
+.slide-menu-container {
+    
+    background: var(--side-panel-bg);
+    border-radius: 0;
+    box-shadow: none;           
+    transition: width 0.3s ease;
+    overflow: hidden;
+  }
+  
+  /* Header */
+  .slide-menu-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 8px 4px 8px;
+    gap: 10px;
+  }
+  
+  /* Primary action button uses accent from theme */
+  .expand-collapse-btn {
+    background: var(--accent, #0d9488);
+    color: var(--on-accent, #fff);
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      filter: brightness(0.95);
+      transform: scale(1.03);
+    }
+  
+    i {
+      transition: transform 0.2s ease;
+      &.rotated { transform: rotate(180deg); }
+    }
+  }
+  
+  .menu-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color, #374151);
+    margin: 0;
+    white-space: nowrap;
+  }
+  
+  .menu-divider {
+    border: none;
+    height: 1px;
+    background: var(--side-panel-border, #e5e7eb);
+    margin: 6px 8px;
+  }
+  
+  /* Tabs */
+  .tab-navigation { padding: 0 8px 6px 8px; }
+  
+  .tab-scroll-container { display: flex; align-items: center; gap: 4px; }
+  
+  .scroll-btn {
+    background: none;
+    border: none;
+    color: var(--muted, #6b7280);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  
+    &:hover { background: rgba(0,0,0,0.04); color: var(--text-color, #374151); }
+  
+    i { font-size: 12px; }
+  }
+  
+  .tab-container {
+    display: flex;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 2px;
+    &::-webkit-scrollbar { display: none; }
+  }
+  
+  .tab-button {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    color: var(--muted, #6b7280);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-weight: 600;
+    position: relative;
+  
+    &:hover { background: rgba(0,0,0,0.04); color: var(--text-color, #374151); }
+  
+    &.active {
+      color: var(--accent, #0d9488);
+      background: color-mix(in srgb, var(--accent, #0d9488) 8%, transparent);
+  
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 10%; right: 10%;
+        height: 2px;
+        background: var(--accent, #0d9488);
+        border-radius: 1px;
+      }
+    }
+  }
+  
+  .tab-content {
+    padding: 10px 8px;
+    border-top: 1px solid var(--side-panel-border, #f3f4f6);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .slide-menu-container { width: 100% !important; }
+    .menu-title { font-size: 15px; }
+    .tab-button { padding: 6px 10px; font-size: 14px; }
+  }
+  
+  /* Collapse animation */
+  .slide-menu-container.collapsed {
+    .menu-title, .menu-divider, .tab-navigation, .tab-content {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
+  }

@@ -1,0 +1,27 @@
+<div
+  class="example-box"
+  cdkDrag
+  (click)="handleClick($event)"
+  *ngIf="!showCharts"
+>
+
+  <!-- Close Button -->
+  <button class="close-button" (click)="onDeleteFromChild()" title="Close">×</button>
+
+  <!-- Title -->
+  <h3 style="margin-top: -10px; text-align: center; margin-bottom: 20px;">
+    {{ label }} Chart
+  </h3>
+
+  <!-- Card Grid -->
+  <div class="card-grid" cdkDragHandle>
+    <div class="card" *ngFor="let card of getAggregateCards()">
+      <h3 class="card-title">{{ card.field }}</h3>
+      <p class="card-value">{{ card.value }}</p>
+      <span class="card-agg-label">{{ card.label }}</span>
+    </div>
+  </div>
+
+  <!-- Optional Resizer Handle (if needed for drag resizing) -->
+  <div class="resizer"></div>
+</div>

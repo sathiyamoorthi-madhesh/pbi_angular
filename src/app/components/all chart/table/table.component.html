@@ -1,0 +1,48 @@
+<div class="example-box" cdkDrag (click)="handleClick($event)">
+  
+
+  <button class="close-button" (click)="hidethepage()" title="Close">×</button>
+
+  <div class="bar-chart-wrapper" cdkDragHandle>
+    <h3 style="margin: 0px 0px 15px 5px;">
+      {{ label }} Chart : {{aggregationType}}
+    <button mat-icon-button aria-label="Export" (click)="exportToExcel()" matTooltip="Export to Excel"
+            style="border:none;background-color: none;">
+      <mat-icon style="color:#00786F; margin: 0 0 -6px 0px">download</mat-icon>
+    </button>
+    </h3>
+    <div class="table-scroll">
+      <table *ngIf="aggregatedData.length; else noData">
+        <thead>
+          <tr>
+            <th *ngFor="let col of Table_columns" (click)="sortData(col)" class="sortable">
+              {{ col }}
+              <span *ngIf="sortColumn === col">
+                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of aggregatedData" [ngStyle]="{'background-color': row.isHighlighted ? '#007bff' : 'transparent', 'color': row.isHighlighted ? 'white' : 'inherit'}" (click)="showSwalTable(row)">
+            <td *ngFor="let col of Table_columns">{{ row[col] }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td *ngFor="let col of Table_columns">
+              <strong *ngIf="numericFields.includes(col)">
+                {{ getAggregatedValue(col) }} | {{ getGrandTotal(col) }}
+              </strong>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <ng-template #noData>
+        <div>Please select columns to display table.</div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="resizer"></div>
+</div>

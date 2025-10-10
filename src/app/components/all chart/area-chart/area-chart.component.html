@@ -1,0 +1,14 @@
+<div class="example-box" cdkDrag (click)="handleClick($event)" *ngIf="!showCharts">
+
+  <!-- Close button -->
+  <button class="close-button" (click)="hidethepage()" title="Close">×</button>
+
+  <div class="bar-chart-wrapper" cdkDragHandle>
+    <h3 style="margin: 0px 0px 0px 5px;">
+      {{ label }} Chart
+    </h3>
+    <div #chartContainer class="chart-container"></div>
+  </div>
+
+  <div class="resizer"></div>
+</div>

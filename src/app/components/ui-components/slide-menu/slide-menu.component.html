@@ -1,0 +1,54 @@
+<div class="slide-menu-container">
+    <!-- Header with expand/collapse button -->
+    <div class="slide-menu-header">
+      <button 
+        class="expand-collapse-btn"
+        (click)="toggleMenu()"
+        [class.expanded]="isExpanded"
+      >
+        <i class="fas fa-chevron-right" [class.rotated]="isExpanded"></i>
+      </button>
+      
+      <h2 class="menu-title" *ngIf="isExpanded">Visualizations</h2>
+    </div>
+  
+    <!-- Divider line -->
+    <hr class="menu-divider" *ngIf="isExpanded">
+  
+    <!-- Tab Navigation -->
+    <div class="tab-navigation" *ngIf="isExpanded">
+      <div class="tab-scroll-container">
+        <button 
+          *ngIf="canScrollLeft" 
+          class="scroll-btn scroll-left"
+          (click)="scrollLeft()"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="tab-container" #tabContainer>
+          <button 
+            *ngFor="let tab of tabs; let i = index"
+            class="tab-button"
+            [class.active]="activeTabIndex === i"
+            (click)="selectTab(i)"
+          >
+            {{ tab.label }}
+          </button>
+        </div>
+        
+        <button 
+          *ngIf="canScrollRight" 
+          class="scroll-btn scroll-right"
+          (click)="scrollRight()"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Tab Content -->
+    <div class="tab-content" *ngIf="isExpanded">
+      <ng-content></ng-content>
+    </div>
+  </div>
