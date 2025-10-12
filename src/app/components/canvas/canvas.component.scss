@@ -9,6 +9,10 @@ body {
     overflow: hidden;
     display: flex;
     background-color: #f8f8f8;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
 /* Custom scrollbar for elegance */
@@ -30,6 +34,11 @@ body {
     height: 100vh;
     width: 100%;
     position: relative;
+    background-color: #f0f2f5;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.01) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.01) 1px, transparent 1px);
+    background-size: 50px 50px;
   }
   
   .main-content-area {
@@ -739,6 +748,12 @@ body {
     border-radius: 6px;
     overflow: auto;
     /* Custom scrollbar will be applied globally */
+    background-color: #ffffff;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: relative;
   }
   
   .content-edit {
@@ -753,6 +768,15 @@ body {
     flex-wrap: wrap; // allow items to wrap to next line
     gap: 16px; // space between items
     justify-content: flex-start;
+    background-color: #ffffff;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    min-height: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
   }
   
   .chart-container>* {
@@ -926,6 +950,16 @@ body {
   .main-container {
     max-width: 600px;
     margin: auto;
+  }
+
+  /* Main content grid background */
+  .main-content-grid {
+    background-color: #ffffff;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: 0 0;
   }
   
   
