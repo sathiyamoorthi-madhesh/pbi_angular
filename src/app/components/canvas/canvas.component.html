@@ -4,36 +4,21 @@
         <!-- Progress Ring Container -->
         <div class="relative w-32 h-32 mx-auto mb-6">
             <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
-        <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#0d9488" />
                         <stop offset="100%" stop-color="#14b8a6" />
-            </linearGradient>
-        </defs>
+                    </linearGradient>
+                </defs>
                 <!-- Background Circle -->
-                <circle 
-                    cx="60" 
-                    cy="60" 
-                    r="52" 
-                    stroke="#e5e7eb" 
-                    stroke-width="8" 
-                    fill="transparent"
-                    class="opacity-30"
-                />
+                <circle cx="60" cy="60" r="52" stroke="#e5e7eb" stroke-width="8" fill="transparent"
+                    class="opacity-30" />
                 <!-- Progress Circle -->
-                <circle 
-                    cx="60" 
-                    cy="60" 
-                    r="52" 
-                    stroke="url(#gradient)" 
-                    stroke-width="8" 
-                    fill="transparent"
-                    stroke-linecap="round"
-                    [attr.stroke-dasharray]="circumference"
+                <circle cx="60" cy="60" r="52" stroke="url(#gradient)" stroke-width="8" fill="transparent"
+                    stroke-linecap="round" [attr.stroke-dasharray]="circumference"
                     [attr.stroke-dashoffset]="circumference - (loadingProgress / 100) * circumference"
-                    class="transition-all duration-300 ease-out"
-                />
-    </svg>
+                    class="transition-all duration-300 ease-out" />
+            </svg>
             <!-- Progress Text in Center -->
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center">
@@ -41,13 +26,13 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Loading Text -->
         <div class="space-y-2">
             <h3 class="text-xl font-semibold text-gray-800">Loading Charts</h3>
             <p class="text-gray-500 text-sm">Please wait while we prepare your data...</p>
         </div>
-        
+
         <!-- Loading Animation Dots -->
         <div class="flex justify-center space-x-1 mt-4">
             <div class="w-2 h-2 bg-teal-500 rounded-full animate-bounce"></div>
@@ -59,11 +44,11 @@
 
 <div class="wrapper" style="background-color: #f0f2f5;">
     <div class="main-content-area" id="mainContentArea">
-        <div class="flex h-full gap-3">
+        <div class="flex h-full">
 
             <!-- Main Content Area -->
-            <div class="flex-1 bg-white shadow-lg border border-slate-200 rounded-xl" 
-                 style="transition: all 0.3s ease; min-width: 0;">
+            <div class="flex-1 bg-white shadow-lg border border-slate-200 rounded-xl"
+                style="transition: all 0.3s ease; min-width: 0;">
                 <!-- Simple and Subtle Top Form -->
                 <div class="bg-white border-b border-gray-200">
                     <!-- Top Form Controls -->
@@ -71,70 +56,52 @@
                         <!-- Left Section: Back Button & Tab Input -->
                         <div class="flex items-center space-x-3">
                             <!-- Back Button -->
-                            <button 
-                                (click)="backtoworkspace()" 
+                            <button (click)="backtoworkspace()"
                                 class="flex items-center px-3 py-1.5 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded transition-all duration-200 hover:shadow-sm"
-                                matTooltip="Back to Workspace"
-                            >
+                                matTooltip="Back to Workspace">
                                 <i class="fa fa-arrow-left mr-1.5 text-sm"></i>
                                 <span class="text-sm">Back</span>
-                    </button>
-                            
+                            </button>
+
                             <!-- Tab Name Input -->
-                            <input 
-                                [(ngModel)]="newTabName" 
-                                placeholder="New Tab Name" 
-                                class="w-48 px-3 py-1.5 text-sm border border-gray-300 rounded focus:border-teal-400 focus:ring-1 focus:ring-teal-100 focus:outline-none transition-all duration-200 hover:border-teal-300 hover:shadow-sm"
-                            />
+                            <input [(ngModel)]="newTabName" placeholder="New Tab Name"
+                                class="w-48 px-3 py-1.5 text-sm border border-gray-300 rounded focus:border-teal-400 focus:ring-1 focus:ring-teal-100 focus:outline-none transition-all duration-200 hover:border-teal-300 hover:shadow-sm" />
                         </div>
 
                         <!-- Right Section: Action Buttons -->
                         <div class="flex items-center space-x-2">
                             <!-- Add Tab Button -->
-                            <button 
-                                (click)="addTab()" 
-                                matTooltip="Add a new tab"
-                                class="flex items-center px-3 py-1.5 bg-teal-600 text-white rounded hover:bg-teal-700 hover:shadow-md transition-all duration-200 font-medium"
-                            >
+                            <button (click)="addTab()" matTooltip="Add a new tab"
+                                class="flex items-center px-3 py-1.5 bg-teal-600 text-white rounded hover:bg-teal-700 hover:shadow-md transition-all duration-200 font-medium">
                                 <i class="fa fa-plus mr-1.5 text-sm"></i>
                                 <span class="text-sm">New Tab</span>
-                    </button>
+                            </button>
 
                             <!-- Edit Button -->
-                            <button 
-                                (click)="Onshowbutton()" 
+                            <button (click)="Onshowbutton()"
                                 class="flex items-center px-3 py-1.5 bg-teal-600 text-white rounded hover:bg-teal-700 hover:shadow-md transition-all duration-200 font-medium"
-                                matTooltip="Toggle Edit Mode"
-                            >
+                                matTooltip="Toggle Edit Mode">
                                 <i class="fa-solid fa-pen mr-1.5 text-sm"></i>
                                 <span class="text-sm">Edit</span>
-                    </button>
+                            </button>
 
                             <!-- Solve Button -->
-                            <button 
-                                (click)="button()" 
+                            <button (click)="button()"
                                 class="flex items-center px-3 py-1.5 bg-teal-600 text-white rounded hover:bg-teal-700 hover:shadow-md transition-all duration-200 font-medium"
-                                matTooltip="Solve Issues"
-                            >
+                                matTooltip="Solve Issues">
                                 <i class="fa-solid fa-pen mr-1.5 text-sm"></i>
                                 <span class="text-sm">Solve</span>
-                    </button>
+                            </button>
 
                             <!-- Save Button -->
-                            <button 
-                                (click)="onSave()" 
-                                matTooltip="Save project"
-                                class="flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded hover:bg-green-600 hover:shadow-md transition-all duration-200 hover:scale-105"
-                            >
+                            <button (click)="onSave()" matTooltip="Save project"
+                                class="flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded hover:bg-green-600 hover:shadow-md transition-all duration-200 hover:scale-105">
                                 <mat-icon class="text-white text-sm">save</mat-icon>
-                    </button>
+                            </button>
 
                             <!-- Cancel Button -->
-                            <button 
-                                (click)="onCancel()" 
-                                matTooltip="Clean Project"
-                                class="flex items-center justify-center w-8 h-8 bg-teal-500 text-white rounded hover:bg-teal-600 hover:shadow-md transition-all duration-200 hover:scale-105"
-                            >
+                            <button (click)="onCancel()" matTooltip="Clean Project"
+                                class="flex items-center justify-center w-8 h-8 bg-teal-500 text-white rounded hover:bg-teal-600 hover:shadow-md transition-all duration-200 hover:scale-105">
                                 <mat-icon class="text-white text-sm">cancel</mat-icon>
                             </button>
                         </div>
@@ -143,28 +110,22 @@
                     <!-- Simple Tab Header -->
                     <div class="bg-white">
                         <div class="flex items-center space-x-1 p-2 overflow-x-auto tab-header-scroll">
-                            <div 
-                                *ngFor="let tab of tabs" 
+                            <div *ngFor="let tab of tabs"
                                 [class]="tab.active ? 
                                     'flex items-center px-3 py-2 bg-white text-teal-600 border border-teal-200 rounded shadow-sm' : 
                                     'flex items-center px-3 py-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 hover:border-teal-200 hover:shadow-sm rounded transition-all duration-200 cursor-pointer'"
-                                (click)="selectTab(tab.id)"
-                                matTooltip="{{ tab.title }}" 
-                                matTooltipPosition="above"
-                            >
+                                (click)="selectTab(tab.id)" matTooltip="{{ tab.title }}" matTooltipPosition="above">
                                 <!-- Tab Title -->
                                 <span class="text-sm font-medium whitespace-nowrap">{{ tab.title }}</span>
-                                
+
                                 <!-- Close Button -->
-                                <button 
-                                    (click)="closeTab(tab.id, $event)" 
-                                    class="ml-2 p-0.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all duration-200"
-                                >
+                                <button (click)="closeTab(tab.id, $event)"
+                                    class="ml-2 p-0.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all duration-200">
                                     <i class="fa fa-times text-xs"></i>
                                 </button>
                             </div>
                         </div>
-                </div>
+                    </div>
                 </div>
 
                 <div class="tab-body" *ngIf="currentTab" (click)="click()">
@@ -245,150 +206,211 @@
 
             </div>
 
-            <!-- App Side Panel 1 - Elegant Design -->
-            <div class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" id="appSide1Wrapper" 
-                 [class.hidden]="!appSide1Visible" *ngIf="OnshowField">
-                <div class="space-y-8" *ngIf="!sidePanel1">
+            <!-- App Side Panel 1 - Power BI Style -->
+            <div class="flex">
+                <!-- Collapsed Panel 1 (when collapsed) -->
+                <div *ngIf="sidePanel1Collapsed" 
+                     class="w-8 bg-gray-100 border-r border-gray-200 flex flex-col items-center justify-center py-4 cursor-pointer hover:bg-gray-200 transition-colors duration-200"
+                     (click)="toggleSidePanel1()">
+                    <div class="writing-mode-vertical text-gray-600 text-s font-medium transform rotate-90 whitespace-nowrap mb-4">
+                        Visualizations
+                    </div>
+                    <!-- <i class="fas fa-chevron-right text-gray-500"></i> -->
+                </div>
 
-                    <!-- Visualizations Panel -->
-                    <div class="bg-white rounded-xl p-3 shadow-xl border border-slate-100">
-                        <div class="flex items-center justify-between mb-5">
-                            <h2 class="text-xl font-bold text-gray-800 tracking-wider">Visualizations</h2>
-                            <i class="fa-solid fa-chart-line text-teal-600"></i>
-                                </div>
+                <!-- Expanded Panel 1 (when expanded) -->
+                <div *ngIf="!sidePanel1Collapsed && OnshowField" 
+                     class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" 
+                     id="appSide1Wrapper"
+                     [class.hidden]="!appSide1Visible">
+                    
+                    <!-- Panel Header with Collapse Button -->
+                    <div class="flex items-center justify-between p-3 border-b border-gray-200 bg-gray-50">
+                        <div class="flex items-center">
+                            <i class="fas fa-chart-line text-teal-600 mr-2"></i>
+                            <h2 class="text-lg font-semibold text-gray-800">Visualizations</h2>
+                        </div>
+                        <button (click)="toggleSidePanel1()" 
+                                class="p-1 hover:bg-gray-200 rounded transition-colors duration-200">
+                            <i class="fas fa-chevron-right text-gray-500"></i>
+                        </button>
+                    </div>
 
-                        <!-- Tabs/Pill Navigation -->
-                        <div class="flex space-x-1 p-1 bg-gray-100 rounded-lg mb-6">
-                            <button class="flex-1 py-2 text-sm font-semibold text-white bg-teal-600 rounded-md shadow-lg transition duration-200">
-                                Charts
-                            </button>
-                            <button class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
-                                Filter
-                            </button>
-                            <button class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
-                                Layouts
-                            </button>
+                    <div class="space-y-8 p-3" *ngIf="!sidePanel1">
+                        <!-- Visualizations Panel -->
+                        <div class="bg-white rounded-xl p-3 shadow-xl border border-slate-100">
+                            <!-- Tabs/Pill Navigation -->
+                            <div class="flex space-x-1 p-1 bg-gray-100 rounded-lg mb-6">
+                                <button
+                                    class="flex-1 py-2 text-sm font-semibold text-white bg-teal-600 rounded-md shadow-lg transition duration-200">
+                                    Charts
+                                </button>
+                                <button
+                                    class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
+                                    Filter
+                                </button>
+                                <button
+                                    class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
+                                    Layouts
+                                </button>
                             </div>
 
-                        <!-- Chart Icon Grid -->
-                        <div class="grid grid-cols-4 gap-3">
-                            <button *ngFor="let icon of chartIcons" 
-                                    (click)="onChartIconClick(icon.label)" 
+                            <!-- Chart Icon Grid -->
+                            <div class="grid grid-cols-4 gap-3">
+                                <button *ngFor="let icon of chartIcons" (click)="onChartIconClick(icon.label)"
                                     [title]="icon.label"
                                     class="flex flex-col items-center p-3 rounded-lg transition duration-150 transform hover:scale-[1.02] active:scale-[0.98]"
                                     [ngClass]="{
-                                        'bg-teal-500/20 text-teal-600 border border-teal-300': selectedChartLabel == icon.label || (activeCharts[icon.label] && selectedChartLabel != icon.label),
-                                        'bg-gray-100 text-gray-600 hover:bg-teal-50 hover:text-teal-700': !activeCharts[icon.label] && selectedChartLabel != icon.label
-                                    }">
-                                <span class="material-icons text-xl">{{ icon.icon }}</span>
-                                
-                                        </button>
-                        </div>
+                                            'bg-teal-500/20 text-teal-600 border border-teal-300': selectedChartLabel == icon.label || (activeCharts[icon.label] && selectedChartLabel != icon.label),
+                                            'bg-gray-100 text-gray-600 hover:bg-teal-50 hover:text-teal-700': !activeCharts[icon.label] && selectedChartLabel != icon.label
+                                        }">
+                                    <span class="material-icons text-xl">{{ icon.icon }}</span>
+                                </button>
+                            </div>
 
-                        
-                        <!-- Chart Configuration Panel -->
-                        <div *ngIf="selectchartfunction" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                            <ng-container *ngIf="selectedMode === ChartMode.CustomField">
-                                <ng-container *ngIf="selectedChart">
-                                    <div class="text-center mb-4">
-                                        <h3 class="text-lg font-semibold text-gray-800">{{ selectedChart.label }}</h3>
-                                        <hr class="mt-2 border-gray-300">
-                                    </div>
-                                    
-                                    <div *ngFor="let field of selectedChart?.fields" class="mb-4">
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">{{ getFieldLabel(field) }}:</label>
-                                        <mat-form-field appearance="outline" class="w-full">
-                                                        <mat-select [(ngModel)]="chartFieldValues[field]" multiple
-                                                            (ngModelChange)="onFieldChange(field)">
-                                                            <mat-option *ngFor="let visibleField of visibleFieldList"
-                                                                [value]="visibleField"
-                                                                [disabled]="isOptionDisabled(field, visibleField)">
-                                                                {{ visibleField }}
-                                                            </mat-option>
-                                                        </mat-select>
-                                                    </mat-form-field>
+                            <!-- Chart Configuration Panel -->
+                            <div *ngIf="selectchartfunction" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <ng-container *ngIf="selectedMode === ChartMode.CustomField">
+                                    <ng-container *ngIf="selectedChart">
+                                        <div class="text-center mb-4">
+                                            <h3 class="text-lg font-semibold text-gray-800">{{ selectedChart.label }}</h3>
+                                            <hr class="mt-2 border-gray-300">
+                                        </div>
+
+                                        <div *ngFor="let field of selectedChart?.fields" class="mb-4">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">{{
+                                                getFieldLabel(field) }}:</label>
+                                            <div class="relative">
+                                                <select 
+                                                    [(ngModel)]="chartFieldValues[field]" 
+                                                    multiple
+                                                    (ngModelChange)="onFieldChange(field)"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-700 shadow-sm hover:border-teal-300 transition-colors duration-200">
+                                                    <option *ngFor="let visibleField of visibleFieldList"
+                                                        [value]="visibleField"
+                                                        [disabled]="isOptionDisabled(field, visibleField)"
+                                                        class="text-gray-700">
+                                                        {{ visibleField }}
+                                                    </option>
+                                                </select>
+                                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                                    <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
                                                 </div>
+                                            </div>
+                                        </div>
 
-                                                <ng-container *ngIf="selectedChart?.aggregates">
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Aggregation:</label>
-                                                    <select [(ngModel)]="selectedAggregation"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                                            <option *ngFor="let agg of allAggregationMethods" [value]="agg">{{ agg }}</option>
-                                                    </select>
-                                                </ng-container>
-                                    
-                                    <div class="flex items-center justify-between mt-6">
-                                                    <button (click)="fetchChartData(labeltype)"
+                                        <ng-container *ngIf="selectedChart?.aggregates">
+                                            <label
+                                                class="block text-sm font-semibold text-gray-700 mb-2">Aggregation:</label>
+                                            <div class="relative">
+                                                <select [(ngModel)]="selectedAggregation"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-700 shadow-sm hover:border-teal-300 transition-colors duration-200">
+                                                    <option *ngFor="let agg of allAggregationMethods" [value]="agg">{{ agg }}</option>
+                                                </select>
+                                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                                    <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+
+                                        <div class="flex items-center justify-between mt-6">
+                                            <button (click)="fetchChartData(labeltype)"
                                                 class="flex-1 py-2 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition duration-200 disabled:bg-gray-400"
                                                 [disabled]="!datagetbutton">
-                                                        Load Chart
-                                                    </button>
-                                        <div class="ml-3">
-                                            <mat-spinner diameter="24" *ngIf="getlodingdata"></mat-spinner>
-                                            <mat-spinner *ngIf="dataloadfunction" diameter="28" class="ml-2"></mat-spinner>
+                                                Load Chart
+                                            </button>
+                                            <div class="ml-3">
+                                                <mat-spinner diameter="24" *ngIf="getlodingdata"></mat-spinner>
+                                                <mat-spinner *ngIf="dataloadfunction" diameter="28"
+                                                    class="ml-2"></mat-spinner>
+                                            </div>
                                         </div>
-                                                </div>
-                                            </ng-container>
-                                        </ng-container>
-                                    </div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                                    </div>
-            <!-- App Side Panel 2 - Elegant Fields Design -->
-            <div class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" id="appSide2Wrapper" 
-                 [class.hidden]="!appSide2Visible" *ngIf="OnshowField">
-                <div class="space-y-8" *ngIf="!sidePanel2">
-                    
-                    <!-- Fields Panel -->
-                    <div class="bg-white rounded-xl p-3 shadow-xl border border-slate-100">
-                        <div class="flex items-center justify-between mb-5">
-                            <h2 class="text-xl font-bold text-gray-800 tracking-wider">Fields</h2>
-                            <i class="fa-solid fa-database text-teal-600"></i>
-                        </div>
-
-                        <div class="space-y-2">
-                            <!-- Field Collection Items -->
-                            <div *ngFor="let collection of collectionNames" 
-                                 class="rounded-lg shadow-sm border transition duration-150"
-                                 [ngClass]="{
-                                     'bg-teal-50 border-teal-200': collectionExpanded[collection],
-                                     'bg-white border-gray-200 hover:bg-gray-100': !collectionExpanded[collection]
-                                 }">
-                                
-                                <!-- Collection Header -->
-                                <div class="flex items-center justify-between p-3 cursor-pointer text-gray-800"
-                                     (click)="toggleCollectionVisibility(collection)">
-                                    <span class="font-semibold text-lg">{{ collection }}</span>
-                                    <i [class]="'fa-solid fa-chevron-' + (collectionExpanded[collection] ? 'up' : 'right') + ' text-xs'"
-                                       [ngClass]="{
-                                           'text-teal-600': collectionExpanded[collection],
-                                           'text-gray-500': !collectionExpanded[collection]
-                                       }"></i>
             </div>
-                                
-                                <!-- Collection Fields (Dropdown Content) -->
-                                <div *ngIf="collectionExpanded[collection]" 
-                                    class="px-4 pb-3 space-y-1 text-gray-600 text-sm border-t border-teal-100">
+
+            <!-- App Side Panel 2 - Power BI Style -->
+            <div class="flex">
+                <!-- Collapsed Panel 2 (when collapsed) -->
+                <div *ngIf="sidePanel2Collapsed" 
+                     class="w-8 bg-gray-100 border-l border-gray-200 flex flex-col items-center justify-center py-4 cursor-pointer hover:bg-gray-200 transition-colors duration-200"
+                     (click)="toggleSidePanel2()">
+                    <div class="writing-mode-vertical text-gray-600 text-s font-medium transform rotate-90 whitespace-nowrap mb-4">
+                        Fields
+                    </div>
+                    <!-- <i class="fas fa-chevron-left text-gray-500"></i> -->
+                </div>
+
+                <!-- Expanded Panel 2 (when expanded) -->
+                <div *ngIf="!sidePanel2Collapsed && OnshowField" 
+                     class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" 
+                     id="appSide2Wrapper"
+                     [class.hidden]="!appSide2Visible">
+                    
+                    <!-- Panel Header with Collapse Button -->
+                    <div class="flex items-center justify-between p-3 border-b border-gray-200 bg-gray-50">
+                        <div class="flex items-center">
+                            <i class="fas fa-database text-teal-600 mr-2"></i>
+                            <h2 class="text-lg font-semibold text-gray-800">Fields</h2>
+                        </div>
+                        <button (click)="toggleSidePanel2()" 
+                                class="p-1 hover:bg-gray-200 rounded transition-colors duration-200">
+                            <i class="fas fa-chevron-right text-gray-500"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-8 p-3" *ngIf="!sidePanel2">
+                        <!-- Fields Panel -->
+                        <div class="bg-white rounded-xl p-3 shadow-xl border border-slate-100">
+                            <div class="space-y-2">
+                                <!-- Field Collection Items -->
+                                <div *ngFor="let collection of collectionNames"
+                                    class="rounded-lg shadow-sm border transition duration-150" [ngClass]="{
+                                         'bg-teal-50 border-teal-200': collectionExpanded[collection],
+                                         'bg-white border-gray-200 hover:bg-gray-100': !collectionExpanded[collection]
+                                     }">
+
+                                    <!-- Collection Header -->
+                                    <div class="flex items-center justify-between p-3 cursor-pointer text-gray-800"
+                                        (click)="toggleCollectionVisibility(collection)">
+                                        <span class="font-semibold text-lg">{{ collection }}</span>
+                                        <i [class]="'fa-solid fa-chevron-' + (collectionExpanded[collection] ? 'up' : 'right') + ' text-xs'"
+                                            [ngClass]="{
+                                               'text-teal-600': collectionExpanded[collection],
+                                               'text-gray-500': !collectionExpanded[collection]
+                                           }"></i>
+                                    </div>
+
+                                    <!-- Collection Fields (Dropdown Content) -->
+                                    <div *ngIf="collectionExpanded[collection]"
+                                        class="px-4 pb-3 space-y-1 text-gray-600 text-sm border-t border-teal-100">
                                         <div cdkDropList [cdkDropListData]="collections[collection]"
-                                        (cdkDropListDropped)="dropField($event, collection)" class="space-y-1">
-                                        <div *ngFor="let field of collections[collection]; let isLast = last" 
-                                            class="flex items-center justify-between p-2 rounded hover:bg-teal-100 transition cursor-move"
+                                            (cdkDropListDropped)="dropField($event, collection)" class="space-y-1">
+                                            <div *ngFor="let field of collections[collection]; let isLast = last"
+                                                class="flex items-center justify-between p-2 rounded hover:bg-teal-100 transition cursor-move"
                                                 cdkDrag>
-                                            <div class="flex items-center min-w-0 flex-1">
-                                                <input type="checkbox"
-                                                       class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
-                                                       [checked]="columnVisibility[field]"
-                                                       (change)="toggleColumn(field, $any($event.target).checked)" />
-                                                <span class="block truncate max-w-full" [matTooltip]="field" matTooltipPosition="above">{{ field }}</span>
+                                                <div class="flex items-center min-w-0 flex-1">
+                                                    <input type="checkbox"
+                                                        class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                                                        [checked]="columnVisibility[field]"
+                                                        (change)="toggleColumn(field, $any($event.target).checked)" />
+                                                    <span class="block truncate max-w-full" [matTooltip]="field"
+                                                        matTooltipPosition="above">{{ field }}</span>
+                                                </div>
+                                                <i
+                                                    class="fa-solid fa-grip-vertical text-gray-400 text-xs ml-2 flex-shrink-0"></i>
                                             </div>
-                                            <i class="fa-solid fa-grip-vertical text-gray-400 text-xs ml-2 flex-shrink-0"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                        </div>
+                </div>
             </div>
 
         </div>

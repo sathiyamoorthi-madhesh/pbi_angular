@@ -155,7 +155,7 @@ export class CanvasComponent implements OnInit {
   Oncollecteddata: CollectedItem[] = [];
   sidePanel1?: boolean;
   sidePanel2?: boolean;
-  OnshowField?: boolean;
+  OnshowField: boolean = false;
   chartNames: string[] = [];
   OnRelationshipfield: any[] = [];
   workspacefile: any;
@@ -205,6 +205,8 @@ export class CanvasComponent implements OnInit {
   loadingProgress = 0; // percentage value 0–100
   Oncountdata?: number;
   count = 0;
+  sidePanel1Collapsed = false;
+  sidePanel2Collapsed = false;
 
   fieldChanges: { title: string, label: { [key: string]: any }[] }[] = [];
   constructor(private coreservice: CoreService, private snackBar: MatSnackBar, private router: Router) { }
@@ -303,6 +305,14 @@ export class CanvasComponent implements OnInit {
 
   onTabChange(event: MatTabChangeEvent) {
     console.log('------------------', event.tab.textLabel);
+  }
+
+  toggleSidePanel1() {
+    this.sidePanel1Collapsed = !this.sidePanel1Collapsed;
+  }
+
+  toggleSidePanel2() {
+    this.sidePanel2Collapsed = !this.sidePanel2Collapsed;
   }
 
 

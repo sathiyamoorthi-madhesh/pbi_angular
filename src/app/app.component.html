@@ -1,8 +1,8 @@
 <!-- Header Bar -->
-<header class="bg-white shadow-md p-4 flex justify-between items-center text-sm">
+<header class="bg-white shadow-md p-3 flex justify-between items-center text-sm">
   <div class="flex items-center space-x-1">
     <!-- Menu icon (as seen in the original image) -->
-    <button (click)="toggleSidebar()"
+    <button *ngIf="!isCanvasScreen" (click)="toggleSidebar()"
           class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 hover:text-teal-600 hover:bg-teal-50 transition">
       <i class="fas fa-bars"></i>
     </button>
@@ -24,7 +24,7 @@
 <!-- MAIN DASHBOARD LAYOUT -->
 <div class="flex min-h-[calc(100vh-48px)]">
   <!-- Collapsible sidebar -->
-  <nav [class.w-18]="sidebarCollapsed" [class.w-56]="!sidebarCollapsed"
+  <nav *ngIf="!isCanvasScreen" [class.w-18]="sidebarCollapsed" [class.w-56]="!sidebarCollapsed"
        class="bg-white shadow-xl p-3 space-y-2 border-r border-gray-100 transition-all duration-200 ease-in-out">
 
     <!-- Workspace -->
