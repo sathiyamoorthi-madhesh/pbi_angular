@@ -33,6 +33,7 @@ import { MatAccordion } from "@angular/material/expansion";
 import { MaterialImportsModule } from "../../material.imports";
 import { Subscription } from 'rxjs';
 import { CardComponent } from '../ui-components/card/card.component';
+import { DropdownComponent, DropdownOption, DropdownSelection } from '../ui-components/dropdown/dropdown.component';
 
 enum ChartMode {
   CustomField = 'CustomField',
@@ -90,7 +91,8 @@ interface ChartEntry {
     AreaChartComponent,
     TableComponent,
     StackedcolumnComponent,
-    MaterialImportsModule
+    MaterialImportsModule,
+    DropdownComponent
   ],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss'
@@ -207,6 +209,10 @@ export class CanvasComponent implements OnInit {
   count = 0;
   sidePanel1Collapsed = false;
   sidePanel2Collapsed = false;
+
+  // Dropdown options
+  fieldDropdownOptions: { [key: string]: DropdownOption[] } = {};
+  aggregationDropdownOptions: DropdownOption[] = [];
 
   fieldChanges: { title: string, label: { [key: string]: any }[] }[] = [];
   constructor(private coreservice: CoreService, private snackBar: MatSnackBar, private router: Router) { }
@@ -741,7 +747,56 @@ export class CanvasComponent implements OnInit {
   }
 
   click() {
-    this.selectchartfunction = false
+    this.selectchartfunction = false;
+  }
+
+  // Dropdown management methods (simplified for component usage)
+
+  // Prepare dropdown options
+  prepareFieldDropdownOptions(field: string): DropdownOption[] {
+    if (!this.fieldDropdownOptions[field]) {
+      this.fieldDropdownOptions[field] = this.visibleFieldList.map(fieldName => ({
+        value: fieldName,
+        label: fieldName,
+        disabled: false
+      }));
+    }
+    return this.fieldDropdownOptions[field];
+  }
+
+  prepareAggregationDropdownOptions(): DropdownOption[] {
+    if (this.aggregationDropdownOptions.length === 0) {
+      this.aggregationDropdownOptions = this.allAggregationMethods.map(agg => ({
+        value: agg,
+        label: agg,
+        disabled: false
+      }));
+    }
+    return this.aggregationDropdownOptions;
+  }
+
+  // Handle dropdown selection changes
+  onFieldDropdownChange(event: DropdownSelection): void {
+    const { field, values } = event;
+    this.chartFieldValues[field] = values as any;
+    this.onFieldChange(field);
+  }
+
+  onAggregationDropdownChange(event: DropdownSelection): void {
+    const { values } = event;
+    this.selectedAggregation = values[0];
+  }
+
+  // Get field selection limit
+  getFieldSelectionLimit(field: string): number {
+    return this.fieldSelectionLimits[field] || Infinity;
+  }
+
+  // Get field selected values as array
+  getFieldSelectedValues(field: string): any[] {
+    const values = this.chartFieldValues[field];
+    if (!values) return [];
+    return Array.isArray(values) ? values : [values];
   }
 
   getSelectedFields(): string[] {
@@ -762,7 +817,7 @@ export class CanvasComponent implements OnInit {
 
         let sampleData = response.data;
 
-        // ✅ filter out items where label === 'Filter'
+        // filter out items where label === 'Filter'
         if (Array.isArray(sampleData)) {
           sampleData = sampleData.filter(item => item.label !== 'Filter');
         }

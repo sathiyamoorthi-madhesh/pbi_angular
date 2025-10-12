@@ -95,14 +95,14 @@
 
                             <!-- Save Button -->
                             <button (click)="onSave()" matTooltip="Save project"
-                                class="flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded hover:bg-green-600 hover:shadow-md transition-all duration-200 hover:scale-105">
-                                <mat-icon class="text-white text-sm">save</mat-icon>
+                                class="flex items-center justify-center w-8 h-8 bg-teal-500 text-white rounded hover:bg-teal-600 hover:shadow-md transition-all duration-200 hover:scale-105">
+                                <mat-icon class="text-white text-m">save</mat-icon>
                             </button>
 
                             <!-- Cancel Button -->
                             <button (click)="onCancel()" matTooltip="Clean Project"
                                 class="flex items-center justify-center w-8 h-8 bg-teal-500 text-white rounded hover:bg-teal-600 hover:shadow-md transition-all duration-200 hover:scale-105">
-                                <mat-icon class="text-white text-sm">cancel</mat-icon>
+                                <mat-icon class="text-white text-m">cancel</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
 
                 <!-- Expanded Panel 1 (when expanded) -->
                 <div *ngIf="!sidePanel1Collapsed && OnshowField" 
-                     class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" 
+                     class="w-56 bg-white shadow-lg custom-scroll overflow-y-auto" 
                      id="appSide1Wrapper"
                      [class.hidden]="!appSide1Visible">
                     
@@ -236,93 +236,86 @@
                         </button>
                     </div>
 
-                    <div class="space-y-8 p-3" *ngIf="!sidePanel1">
+                    <div class="space-y-4 p-2" *ngIf="!sidePanel1">
                         <!-- Visualizations Panel -->
-                        <div class="bg-white rounded-xl p-3 shadow-xl border border-slate-100">
+                        <div class="bg-white p-2 border-slate-100">
                             <!-- Tabs/Pill Navigation -->
-                            <div class="flex space-x-1 p-1 bg-gray-100 rounded-lg mb-6">
+                            <div class="flex space-x-1 p-1 bg-gray-100 rounded-md mb-4">
                                 <button
-                                    class="flex-1 py-2 text-sm font-semibold text-white bg-teal-600 rounded-md shadow-lg transition duration-200">
+                                    class="flex-1 py-1.5 text-xs font-semibold text-white bg-teal-600 rounded-md shadow-lg transition duration-200">
                                     Charts
                                 </button>
                                 <button
-                                    class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
+                                    class="flex-1 py-1.5 text-xs font-medium text-gray-600 hover:text-teal-600 transition duration-200">
                                     Filter
                                 </button>
                                 <button
-                                    class="flex-1 py-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition duration-200">
+                                    class="flex-1 py-1.5 text-xs font-medium text-gray-600 hover:text-teal-600 transition duration-200">
                                     Layouts
                                 </button>
                             </div>
 
                             <!-- Chart Icon Grid -->
-                            <div class="grid grid-cols-4 gap-3">
+                            <div class="grid grid-cols-5 gap-2">
                                 <button *ngFor="let icon of chartIcons" (click)="onChartIconClick(icon.label)"
                                     [title]="icon.label"
-                                    class="flex flex-col items-center p-3 rounded-lg transition duration-150 transform hover:scale-[1.02] active:scale-[0.98]"
+                                    class="flex flex-col items-center p-2 rounded-md transition duration-150 transform hover:scale-[1.05] active:scale-[0.95] compact-icon-btn"
                                     [ngClass]="{
                                             'bg-teal-500/20 text-teal-600 border border-teal-300': selectedChartLabel == icon.label || (activeCharts[icon.label] && selectedChartLabel != icon.label),
                                             'bg-gray-100 text-gray-600 hover:bg-teal-50 hover:text-teal-700': !activeCharts[icon.label] && selectedChartLabel != icon.label
                                         }">
-                                    <span class="material-icons text-xl">{{ icon.icon }}</span>
+                                    <span class="material-icons text-base">{{ icon.icon }}</span>
                                 </button>
                             </div>
 
                             <!-- Chart Configuration Panel -->
-                            <div *ngIf="selectchartfunction" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <div *ngIf="selectchartfunction" class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
                                 <ng-container *ngIf="selectedMode === ChartMode.CustomField">
                                     <ng-container *ngIf="selectedChart">
-                                        <div class="text-center mb-4">
-                                            <h3 class="text-lg font-semibold text-gray-800">{{ selectedChart.label }}</h3>
-                                            <hr class="mt-2 border-gray-300">
+                                        <div class="text-center mb-3">
+                                            <h3 class="text-sm font-semibold text-gray-800">{{ selectedChart.label }}</h3>
+                                            <hr class="mt-1 border-gray-300">
                                         </div>
 
-                                        <div *ngFor="let field of selectedChart?.fields" class="mb-4">
-                                            <label class="block text-sm font-semibold text-gray-700 mb-2">{{
+                                        <div *ngFor="let field of selectedChart?.fields" class="mb-3">
+                                            <label class="block text-xs font-semibold text-gray-700 mb-1">{{
                                                 getFieldLabel(field) }}:</label>
-                                            <div class="relative">
-                                                <select 
-                                                    [(ngModel)]="chartFieldValues[field]" 
-                                                    multiple
-                                                    (ngModelChange)="onFieldChange(field)"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-700 shadow-sm hover:border-teal-300 transition-colors duration-200">
-                                                    <option *ngFor="let visibleField of visibleFieldList"
-                                                        [value]="visibleField"
-                                                        [disabled]="isOptionDisabled(field, visibleField)"
-                                                        class="text-gray-700">
-                                                        {{ visibleField }}
-                                                    </option>
-                                                </select>
-                                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                    <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
-                                                </div>
-                                            </div>
+                                            <app-dropdown
+                                                [options]="prepareFieldDropdownOptions(field)"
+                                                [selectedValues]="getFieldSelectedValues(field)"
+                                                [field]="field"
+                                                [placeholder]="'-- Select ' + getFieldLabel(field) + ' --'"
+                                                [multiple]="true"
+                                                [maxSelections]="getFieldSelectionLimit(field)"
+                                                [compact]="true"
+                                                (selectionChange)="onFieldDropdownChange($event)">
+                                            </app-dropdown>
                                         </div>
 
                                         <ng-container *ngIf="selectedChart?.aggregates">
                                             <label
-                                                class="block text-sm font-semibold text-gray-700 mb-2">Aggregation:</label>
-                                            <div class="relative">
-                                                <select [(ngModel)]="selectedAggregation"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-700 shadow-sm hover:border-teal-300 transition-colors duration-200">
-                                                    <option *ngFor="let agg of allAggregationMethods" [value]="agg">{{ agg }}</option>
-                                                </select>
-                                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                    <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
-                                                </div>
-                                            </div>
+                                                class="block text-xs font-semibold text-gray-700 mb-1">Aggregation:</label>
+                                            <app-dropdown
+                                                [options]="prepareAggregationDropdownOptions()"
+                                                [selectedValues]="selectedAggregation ? [selectedAggregation] : []"
+                                                [field]="'aggregation'"
+                                                [placeholder]="'-- Select Aggregation --'"
+                                                [multiple]="false"
+                                                [compact]="true"
+                                                (selectionChange)="onAggregationDropdownChange($event)">
+                                            </app-dropdown>
                                         </ng-container>
 
-                                        <div class="flex items-center justify-between mt-6">
+                                        <div class="flex items-center justify-between mt-4">
                                             <button (click)="fetchChartData(labeltype)"
-                                                class="flex-1 py-2 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition duration-200 disabled:bg-gray-400"
+                                                class="flex-1 py-1.5 text-xs bg-teal-600 text-white rounded-md font-semibold hover:bg-teal-700 transition duration-200 disabled:bg-gray-400"
                                                 [disabled]="!datagetbutton">
                                                 Load Chart
                                             </button>
-                                            <div class="ml-3">
-                                                <mat-spinner diameter="24" *ngIf="getlodingdata"></mat-spinner>
-                                                <mat-spinner *ngIf="dataloadfunction" diameter="28"
-                                                    class="ml-2"></mat-spinner>
+                                            <div class="ml-2">
+                                                <mat-spinner diameter="16" *ngIf="getlodingdata"></mat-spinner>
+                                                <mat-spinner *ngIf="dataloadfunction" diameter="18"
+                                                    class="ml-1"></mat-spinner>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -347,7 +340,7 @@
 
                 <!-- Expanded Panel 2 (when expanded) -->
                 <div *ngIf="!sidePanel2Collapsed && OnshowField" 
-                     class="w-70 bg-white shadow-lg custom-scroll overflow-y-auto" 
+                     class="w-56 bg-white shadow-lg custom-scroll overflow-y-auto" 
                      id="appSide2Wrapper"
                      [class.hidden]="!appSide2Visible">
                     
@@ -363,21 +356,21 @@
                         </button>
                     </div>
 
-                    <div class="space-y-8 p-3" *ngIf="!sidePanel2">
+                    <div class="space-y-4 p-2" *ngIf="!sidePanel2">
                         <!-- Fields Panel -->
-                        <div class="bg-white rounded-xl p-3 shadow-xl border border-slate-100">
-                            <div class="space-y-2">
+                        <div class="bg-white p-2 border-slate-100">
+                            <div class="space-y-1">
                                 <!-- Field Collection Items -->
                                 <div *ngFor="let collection of collectionNames"
-                                    class="rounded-lg shadow-sm border transition duration-150" [ngClass]="{
+                                    class="rounded-md shadow-sm border transition duration-150" [ngClass]="{
                                          'bg-teal-50 border-teal-200': collectionExpanded[collection],
                                          'bg-white border-gray-200 hover:bg-gray-100': !collectionExpanded[collection]
                                      }">
 
                                     <!-- Collection Header -->
-                                    <div class="flex items-center justify-between p-3 cursor-pointer text-gray-800"
+                                    <div class="flex items-center justify-between p-2 cursor-pointer text-gray-800"
                                         (click)="toggleCollectionVisibility(collection)">
-                                        <span class="font-semibold text-lg">{{ collection }}</span>
+                                        <span class="font-semibold text-sm">{{ collection }}</span>
                                         <i [class]="'fa-solid fa-chevron-' + (collectionExpanded[collection] ? 'up' : 'right') + ' text-xs'"
                                             [ngClass]="{
                                                'text-teal-600': collectionExpanded[collection],
@@ -387,22 +380,22 @@
 
                                     <!-- Collection Fields (Dropdown Content) -->
                                     <div *ngIf="collectionExpanded[collection]"
-                                        class="px-4 pb-3 space-y-1 text-gray-600 text-sm border-t border-teal-100">
+                                        class="px-3 pb-2 space-y-1 text-gray-600 text-xs border-t border-teal-100">
                                         <div cdkDropList [cdkDropListData]="collections[collection]"
                                             (cdkDropListDropped)="dropField($event, collection)" class="space-y-1">
                                             <div *ngFor="let field of collections[collection]; let isLast = last"
-                                                class="flex items-center justify-between p-2 rounded hover:bg-teal-100 transition cursor-move"
+                                                class="flex items-center justify-between p-1.5 rounded hover:bg-teal-100 transition cursor-move"
                                                 cdkDrag>
                                                 <div class="flex items-center min-w-0 flex-1">
                                                     <input type="checkbox"
-                                                        class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                                                        class="mr-1.5 h-3 w-3 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
                                                         [checked]="columnVisibility[field]"
                                                         (change)="toggleColumn(field, $any($event.target).checked)" />
-                                                    <span class="block truncate max-w-full" [matTooltip]="field"
+                                                    <span class="block truncate max-w-full text-xs" [matTooltip]="field"
                                                         matTooltipPosition="above">{{ field }}</span>
                                                 </div>
                                                 <i
-                                                    class="fa-solid fa-grip-vertical text-gray-400 text-xs ml-2 flex-shrink-0"></i>
+                                                    class="fa-solid fa-grip-vertical text-gray-400 text-xs ml-1 flex-shrink-0"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -412,7 +405,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
