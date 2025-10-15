@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
+import { environment } from '../../environments/environment.development';
 
 
 export interface TabData {
@@ -51,7 +52,7 @@ checkSession() {
 
   collectiondata(page: number, limit: number): Observable<any> {
     const params = new HttpParams().set('page', page).set('limit', limit);
-    return this.http.get<any>(`${this.baseUrl}/collection-data`, { params });
+    return this.http.get<any>(`${environment.collectionDataUrl}`, { params });
   }
   collectionData(page: number, limit: number): Observable<any> {
     const params = new HttpParams()
@@ -59,12 +60,12 @@ checkSession() {
       .set('limit', limit.toString());
     console.log('Calling collection-data with params:', params.toString());
 
-    return this.http.get<any>(`${this.baseUrl}/collection-data`, { params });
+    return this.http.get<any>(`${environment.collectionDataUrl}`, { params });
   }
 
 
   saveSelectedFilter(fileName: string, selectedFilter: string[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save-filters`, { fileName, selectedFilter });
+    return this.http.post(`${environment.saveSelectedFiltersUrl}`, { fileName, selectedFilter });
   }
 
 
@@ -121,34 +122,34 @@ checkSession() {
 
 saveTabs(data: TabData): Observable<any> {
   console.log('----------------------------------------0',data);
-  return this.http.post(`${this.baseUrl3}/saveOrUpdateTabs`, data);
+  return this.http.post(`${environment.saveTabsUrl}`, data);
 }
  updateTabs(dataname: string, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl3}/updateTabs/${dataname}`, data);
+    return this.http.put(`${environment.updateTabsUrl}/${dataname}`, data);
   }
 
   // Get all saved tab data
   getAllTabs(): Observable<TabData[]> {
-    return this.http.get<TabData[]>(`${this.baseUrl3}/getTabs`);
+    return this.http.get<TabData[]>(`${environment.getAllTabsUrl}`);
   }
   
   // Delete a tab by dataname
 deleteTab(file: { foldername: string; dataname: string }): Observable<any> {
   return this.http.delete(
-    `${this.baseUrl3}/deleteTabs/${file.foldername}/${file.dataname}`
+    `${environment.deleteTabsUrl}/${file.foldername}/${file.dataname}`
   );
 }
   // Get a single tab data by dataname
 getTabsByDataname(dataname: any): Observable<TabData> {
   return this.http.get<TabData>(
-    `${this.baseUrl3}/getTabs/${dataname.foldername}/${dataname.dataname}`
+    `${environment.getAllTabsUrl}/${dataname.foldername}/${dataname.dataname}`
   );
 }
 
 
   // Get only unique datanames with error handling
   getDatanames(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl3}/getDatanames`).pipe(
+    return this.http.get<string[]>(`${environment.getDataNamesUrl}`).pipe(
       catchError((error) => {
         console.warn('Chart names not available, returning empty array');
         return of([]);
@@ -169,34 +170,34 @@ getTabsByDataname(dataname: any): Observable<TabData> {
     formData.append('database', database);
     formData.append('collection', collection);
 
-    return this.http.post(`${this.baseUrl}/upload-excel`, formData);
+    return this.http.post(`${environment.uploadExcelUrl}`, formData);
   }
 
   listDatabases(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/list-databases`);
+    return this.http.get<string[]>(`${environment.listDatabasesUrl}`);
   }
 
   listCollections(dbName: string): Observable<{ collections: string[] }> {
-    return this.http.get<{ collections: string[] }>(`${this.baseUrl}/collections/${dbName}`);
+    return this.http.get<{ collections: string[] }>(`${environment.listCollectionsUrl}/${dbName}`);
   }
 
   getCollectionData(dbName: string, collectionName: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/mongo-data/${dbName}/${collectionName}`);
+    return this.http.get<any[]>(`${environment.getCollectionDataUrl}/${dbName}/${collectionName}`);
   }
   getCollectionuseData(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/mongo-data/Testdata-Powerbi/testdata`);
+    return this.http.get<any[]>(`${environment.getCollectionDataUrl}/Testdata-Powerbi/testdata`);
   }
 
   updateCollection(dbName: string, collectionName: string, update: Record<string, any>): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update-collection/${dbName}/${collectionName}`, { update });
+    return this.http.put(`${environment.updateCollectionUrl}/${dbName}/${collectionName}`, { update });
   }
 
   deleteCollection(dbName: string, collectionName: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/delete-collection/${dbName}/${collectionName}`);
+    return this.http.delete(`${environment.deleteCollectionUrl}/${dbName}/${collectionName}`);
   }
 
   getCollectionSchema(db: string, collection: string): Observable<any> {
-    return this.http.get<any[]>(`${this.baseUrl}/schema/${db}/${collection}`);
+    return this.http.get<any[]>(`${environment.getCollectionSchemaUrl}/${db}/${collection}`);
   }
 
 
@@ -211,33 +212,33 @@ getTabsByDataname(dataname: any): Observable<TabData> {
 
 
   joinCollections(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl3}/join/${id}`);
+    return this.http.get<any[]>(`${environment.joinCollectionsUrl}/${id}`);
   }
   // saveRelationships(relationships: any[]): Observable<any> {
   //   return this.http.post(`${this.baseUrl}/relationships/save`, relationships);
   // }
 
   addData(filename: string, data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl3}/${filename}`, data);
+    return this.http.post(`${environment.basesvrUrl}/${filename}`, data);
   }
 
   getData(filename: string): Observable<any> {
-    return this.http.get(`${this.baseUrl3}/${filename}`);
+    return this.http.get(`${environment.basesvrUrl}/${filename}`);
   }
 
   listFiles(): Observable<any> {
-    return this.http.get(this.baseUrl3);
+    return this.http.get(environment.basesvrUrl);
   }
 
   updateData(filename: string, index: number, updatedData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl3}/${filename}/${index}`, updatedData);
+    return this.http.put(`${environment.basesvrUrl}/${filename}/${index}`, updatedData);
   }
   getSchema(filename: string): Observable<{ schema: string[] }> {
-    return this.http.get<{ schema: string[] }>(`${this.baseUrl3}/schema/${filename}`);
+    return this.http.get<{ schema: string[] }>(`${environment.getSchemaUrl}/${filename}`);
   }
 
   deleteData(filename: string, index: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl3}/${filename}/${index}`);
+    return this.http.delete(`${environment.basesvrUrl}/${filename}/${index}`);
   }
 
   private optionsSignal = signal<AppSettings>(defaults);
@@ -393,28 +394,28 @@ getTabsByDataname(dataname: any): Observable<TabData> {
   //POST THE RELATIONSHIP DATA
   postCollectionNames(collections: string[]) {
     const params = new HttpParams().set('collections', collections.join(','));
-    return this.http.post(`${this.baseUrl}/post-collections`, {}, { params });
+    return this.http.post(`${environment.postCollectionNamesUrl}`, {}, { params });
   }
 
 
   collectionnameindb(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/dbcollections`);
+    return this.http.get<any>(`${environment.dbCollectionsUrl}`);
   }
 
 
 
   getRelationships(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl3}/relationships`);
+    return this.http.get<any[]>(`${environment.getRelationshipsUrl}`);
   }
 
 
   deleteRelationship(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl3}/relationship/${id}`);
+    return this.http.delete(`${environment.deleteRelationshipUrl}/${id}`);
   }
 
 
   saveRelationship(rel: any): Observable<any> {
-    return this.http.post(`${this.baseUrl3}/relationships`, rel);
+    return this.http.post(`${environment.saveRelationshipsUrl}`, rel);
   }
 
 
@@ -427,7 +428,7 @@ getTabsByDataname(dataname: any): Observable<TabData> {
     const fieldParam = selectedFields.join(',');
     const params = new HttpParams().set('fields', fieldParam);
 
-    return this.http.get<any>(`${this.baseUrl}/collection-tabledata`, { params });
+    return this.http.get<any>(`${environment.getFilteredDataUrl}`, { params });
   }
   //GET CHART DATA FOR CHART CREATE FUNCTION
   // getFilteredData(
@@ -478,7 +479,7 @@ getTabsByDataname(dataname: any): Observable<TabData> {
   }
 
   return this.http.get<{ total: number; data: any[] }>(
-    `${this.baseUrl}/collection-datas`,
+    `${environment.getFilteredData}`,
     { params }
   );
 }
@@ -617,16 +618,16 @@ Ongetreltiondata(): any[] {
   // Save multiple items (POST /save-array)
   saveArray(items: any[]): Observable<any> {
     // console.log('----------ok-------------',items);
-    return this.http.post(`${this.baseUrl3}/save-array`, items);
+    return this.http.post(`${environment.saveArrayUrl}`, items);
   }
   savefileArray(data: any[]): Observable<any> {
     // console.log('----------ok-------------',data);
-    return this.http.post(`${this.baseUrl3}/save-array`, data);
+    return this.http.post(`${environment.saveArrayUrl}`, data);
   }
 
   // Get all items (GET /get-array) with timeout
   getAll(): Observable<any> {
-    return this.http.get(`${this.baseUrl3}/get-array`).pipe(
+    return this.http.get(`${environment.getArrayUrl}`).pipe(
       catchError((error) => {
         console.warn('Backend not available, returning empty data');
         return of({ data: [] });
@@ -636,21 +637,21 @@ Ongetreltiondata(): any[] {
 
   // Get one item by id (GET /get-array/:id)
   getOne(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl3}/get-array/${id}`);
+    return this.http.get(`${environment.getArrayUrl}/${id}`);
   }
 
   // Update one item by id (PUT /update-array/:id)
   updateItem(id: string, updatedData: Partial<any>): Observable<any> {
-    return this.http.put(`${this.baseUrl3}/update-array/${id}`, updatedData);
+    return this.http.put(`${environment.updateArrayUrl}/${id}`, updatedData);
   }
 
   // Delete one item by id (DELETE /delete-array/:id)
   deleteItem(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl3}/delete-array/${id}`);
+    return this.http.delete(`${environment.deleteArrayUrl}/${id}`);
   }
   
   deleteItemFile(folderId: string, fileName: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl3}/delete-file/${folderId}/${fileName}`);
+    return this.http.delete(`${environment.deleteFileurl}/${folderId}/${fileName}`);
   }
 
   //==============workspace data to send and get================

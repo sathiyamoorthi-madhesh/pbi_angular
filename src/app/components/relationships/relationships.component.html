@@ -38,16 +38,18 @@
             <div 
               *ngIf="isCollectionDropdownOpen" 
               class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+              (click)="$event.stopPropagation()"
             >
               <div class="p-2">
                 <div *ngFor="let visibleField of visibleFieldList" 
                      class="flex items-center p-2 hover:bg-teal-50 rounded-md cursor-pointer transition-colors duration-150"
-                     (click)="toggleCollectionSelection(visibleField)">
+                     (click)="toggleCollectionSelection(visibleField); $event.stopPropagation()">
                   <input 
                     type="checkbox" 
                     [checked]="selectedFields.includes(visibleField)"
-                    class="mr-3 h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                    class="mr-3 h-4 w-4 accent-teal-600 focus:ring-teal-500 border-gray-300 rounded"
                     (click)="$event.stopPropagation()"
+                    (change)="onCollectionCheckboxChange(visibleField, $event)"
                   >
                   <span class="text-sm text-gray-700">{{ visibleField }}</span>
                 </div>

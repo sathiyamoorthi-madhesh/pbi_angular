@@ -150,6 +150,11 @@ export class RelationshipsComponent implements OnInit {
     this.targetFields = this.collections[this.selectedTargetCollection] || [];
   }
 
+  onCollectionCheckboxChange(field: any, event: Event): void {
+    event.stopPropagation();
+    this.toggleCollectionSelection(field);
+  }
+
   addRelationship(): void {
   if (
     this.selectedSourceCollection &&

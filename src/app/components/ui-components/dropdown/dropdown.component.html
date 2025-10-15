@@ -1,8 +1,14 @@
-<div class="relative">
+<div class="relative" #dropdownContainer
+      cdkDropList
+      [id]="dropListId"
+      [cdkDropListConnectedTo]="connectedTo"
+      (cdkDropListDropped)="onDrop($event)"
+      (cdkDropListEntered)="onDragEntered()"
+      (cdkDropListExited)="onDragExited()">
   <button 
     type="button" 
     (click)="toggleDropdown($event)"
-    [class]="getButtonClasses()"
+    [class]="getButtonClasses() + (isDragOver ? ' ring-1 ring-teal-500':'')"
     [disabled]="disabled">
     <span class="truncate">
       {{ getDisplayText() }}
@@ -13,8 +19,9 @@
   
   <!-- Custom Dropdown Menu -->
   <div 
-    *ngIf="isOpen" 
-    [class]="getDropdownClasses()">
+    *ngIf="isOpen && options && options.length > 0" 
+    [class]="getDropdownClasses()"
+    (click)="$event.stopPropagation()">
     <div class="p-1">
       <div *ngFor="let option of options" 
            [class]="getOptionClasses()"
@@ -28,10 +35,20 @@
           [checked]="isSelected(option)"
           [disabled]="isDisabled(option)"
           class="mr-2 h-3 w-3 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
-          (click)="$event.stopPropagation()">
+          (click)="$event.stopPropagation()"
+          (click)="toggleSelection(option, $event)">
         
         <span class="text-xs text-gray-700">{{ option.label }}</span>
       </div>
+    </div>
+  </div>
+  
+  <!-- No options message -->
+  <div 
+    *ngIf="isOpen && (!options || options.length === 0)" 
+    [class]="getDropdownClasses()">
+    <div class="p-2 text-xs text-gray-500 text-center">
+      No options available
     </div>
   </div>
 </div>

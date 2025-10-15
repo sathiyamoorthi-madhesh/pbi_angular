@@ -76,6 +76,17 @@
   z-index: 50;
 }
 
+/* Ensure dropdown is clickable */
+.relative {
+  position: relative;
+}
+
+/* Ensure dropdown menu is properly positioned and clickable */
+.absolute {
+  position: absolute;
+  pointer-events: auto;
+}
+
 /* Focus states */
 .focus\:border-teal-500:focus {
   border-color: #14b8a6;
@@ -96,4 +107,8 @@
 
 .shadow-lg {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.ring-1 {
+  box-shadow: 0 0 0 1px rgba(20,184,166,.5);
 }

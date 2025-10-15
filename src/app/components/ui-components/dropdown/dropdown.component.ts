@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
 export interface DropdownOption {
   value: any;
@@ -16,7 +17,7 @@ export interface DropdownSelection {
 @Component({
   selector: 'app-dropdown',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss']
 })
@@ -29,9 +30,16 @@ export class DropdownComponent implements OnInit, OnDestroy {
   @Input() maxSelections: number = Infinity;
   @Input() disabled: boolean = false;
   @Input() compact: boolean = true;
+  @Input() connectedTo: string[] = [];
+  @Input() dropListId: string = '';
   
   @Output() selectionChange = new EventEmitter<DropdownSelection>();
+  // Notify parent which raw field value was dropped so it can auto-check
+  @Output() fieldDropped = new EventEmitter<string>();
   
+  @ViewChild('dropdownContainer', { static: false }) dropdownContainer!: ElementRef;
+  
+  isDragOver = false;
   isOpen = false;
   
   ngOnInit(): void {
@@ -51,8 +59,11 @@ export class DropdownComponent implements OnInit, OnDestroy {
   }
   
   handleClickOutside(event: Event): void {
-    this.isOpen = false;
+    if (this.dropdownContainer && !this.dropdownContainer.nativeElement.contains(event.target)) {
+      this.isOpen = false;
+    }
   }
+
   
   getDisplayText(): string {
     if (!this.selectedValues || this.selectedValues.length === 0) {
@@ -132,4 +143,30 @@ export class DropdownComponent implements OnInit, OnDestroy {
     const baseClasses = 'flex items-center p-1.5 hover:bg-teal-50 rounded cursor-pointer transition-colors duration-150';
     return baseClasses;
   }
+
+  onDrop(event: CdkDragDrop<any>) {
+    const droppedValue = event.item?.data;
+    if (!droppedValue) return;
+
+    // Ensure dropped value exists in options; if not, add it dynamically
+    const existing = this.options.find(o => o.value === droppedValue);
+    if (!existing) {
+      this.options = [...this.options, { value: droppedValue, label: String(droppedValue), disabled: false }];
+    }
+
+    if (this.multiple) {
+      const set = new Set(this.selectedValues || []);
+      set.add(droppedValue);
+      this.selectedValues = Array.from(set);
+    } else {
+      this.selectedValues = [droppedValue];
+      this.isOpen = false;
+    }
+
+    this.selectionChange.emit({ field: this.field, values: this.selectedValues });
+    this.fieldDropped.emit(String(droppedValue));
+  }
+
+  onDragEntered() { this.isDragOver = true; }
+  onDragExited()  { this.isDragOver = false; }
 }

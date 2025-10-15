@@ -108,7 +108,7 @@ export class CanvasComponent implements OnInit {
   currentPage = 0;
   showColumnSelector = true;
   showColumnSelector1 = true;
-  chartFieldValues: { [key: string]: string } = {};
+  chartFieldValues: { [key: string]: string | string[] } = {};
   getlodingdata?: boolean;
   ChartMode = ChartMode;
   selectedMode = ChartMode.CustomField;
@@ -162,6 +162,8 @@ export class CanvasComponent implements OnInit {
   OnRelationshipfield: any[] = [];
   workspacefile: any;
   workspacefile1: any;
+  fieldDropListIds: string[] = [];
+  dropdownListIds: string[] = [];
   limit = 2000;
   skip = 0;
   aggregatecheck?: boolean;
@@ -543,6 +545,12 @@ export class CanvasComponent implements OnInit {
     this.clearAllSelectedColumns();
     this.selectedAggregation = '';
 
+    // Populate visibleFieldList with all available fields from collections
+    this.populateVisibleFieldList();
+    
+    // Clear existing dropdown options to force regeneration with selected fields only
+    this.fieldDropdownOptions = {};
+
     const activeTab = this.currentTab;
     if (activeTab && !activeTab.label?.includes(label)) {
       activeTab.label = activeTab.label ? `${activeTab.label}, ${label}` : label;
@@ -582,6 +590,48 @@ export class CanvasComponent implements OnInit {
         }
       });
     }
+  }
+
+  populateVisibleFieldList(): void {
+    this.visibleFieldList = [];
+    for (const collection in this.collections) {
+      const fields = this.collections[collection];
+      fields.forEach(field => {
+        if (!this.visibleFieldList.includes(field)) {
+          this.visibleFieldList.push(field);
+        }
+      });
+    }
+  }
+
+  getSelectedFieldsList(): string[] {
+    return Object.keys(this.columnVisibility).filter(field => this.columnVisibility[field]);
+  }
+
+  // Auto-check a field in the Fields panel when dropped on a dropdown
+  onFieldDroppedFromDropdown(rawField: string) {
+    if (!rawField) return;
+
+    // Ensure the field exists in any collection, and mark visible/checked
+    const existsInCollections = Object.keys(this.collections).some(coll =>
+      this.collections[coll]?.includes(rawField)
+    );
+
+    if (!existsInCollections) {
+      return;
+    }
+
+    // Check the checkbox and add to visible list if needed
+    if (!this.columnVisibility[rawField]) {
+      this.columnVisibility[rawField] = true;
+      if (!this.visibleFieldList.includes(rawField)) {
+        this.visibleFieldList.push(rawField);
+      }
+      this.updateDisplayedColumns();
+    }
+
+    // Clear dropdown options so they refresh with newly selected fields
+    this.fieldDropdownOptions = {};
   }
 
   toggleNarrowMode() {
@@ -755,7 +805,9 @@ export class CanvasComponent implements OnInit {
   // Prepare dropdown options
   prepareFieldDropdownOptions(field: string): DropdownOption[] {
     if (!this.fieldDropdownOptions[field]) {
-      this.fieldDropdownOptions[field] = this.visibleFieldList.map(fieldName => ({
+      // Use only selected fields instead of all visible fields
+      const selectedFields = this.getSelectedFieldsList();
+      this.fieldDropdownOptions[field] = selectedFields.map(fieldName => ({
         value: fieldName,
         label: fieldName,
         disabled: false
@@ -780,6 +832,19 @@ export class CanvasComponent implements OnInit {
     const { field, values } = event;
     this.chartFieldValues[field] = values as any;
     this.onFieldChange(field);
+  
+    // Sync field panel: mark used fields as checked
+    const used = new Set<string>();
+    Object.values(this.chartFieldValues).forEach(val => {
+      if (Array.isArray(val)) val.forEach(v => used.add(v));
+      else if (typeof val === 'string' && val) used.add(val);
+    });
+  
+    Object.keys(this.columnVisibility).forEach(f => {
+      if (used.has(f)) this.columnVisibility[f] = true;
+    });
+  
+    this.updateDisplayedColumns();
   }
 
   onAggregationDropdownChange(event: DropdownSelection): void {
@@ -814,6 +879,11 @@ export class CanvasComponent implements OnInit {
       next: (response) => {
         this.collections = response.collections || {};
         this.collectionNames = Object.keys(this.collections);
+
+        this.fieldDropListIds = this.collectionNames.map(name => `fieldsList_${name}`)
+        // Create matching dropdown ids per chart field role (x/y/legend/etc.) to allow mutual connections
+        // We generate a stable small set; each dropdown instance will pick one by index in template
+        this.dropdownListIds = ['dropdown_x', 'dropdown_y', 'dropdown_value', 'dropdown_legend', 'dropdown_extra'];
 
         let sampleData = response.data;
 
@@ -927,7 +997,16 @@ export class CanvasComponent implements OnInit {
       return;
     }
 
-    const yFieldName = this.chartFieldValues[yField];
+    let yFieldName = this.chartFieldValues[yField] as any;
+    if(Array.isArray(yFieldName)) {
+      yFieldName = yFieldName[0] || '';
+    }
+
+    if(!yFieldName) {
+      this.aggregationMethods = [];
+      return;
+    }
+
     const sample = this.datasource.data.find(d => d[yFieldName] !== undefined);
     const value = sample?.[yFieldName];
 
@@ -972,8 +1051,40 @@ export class CanvasComponent implements OnInit {
       }
     } else {
       this.visibleFieldList = this.visibleFieldList.filter(f => f !== collectionField);
+      this.removeFieldFromAllRoles(field);
     }
 
+    // Clear dropdown options cache to refresh with new field selection
+    this.fieldDropdownOptions = {};
+    this.updateDisplayedColumns();
+  }
+
+  private removeFieldFromAllRoles(fieldName: string): void {
+    const roles = Object.keys(this.chartFieldValues || {});
+    for (const role of roles) {
+      const val = this.chartFieldValues[role];
+      if (Array.isArray(val)) {
+        const next = val.filter(v => v !== fieldName);
+        if (next.length !== val.length) {
+          this.chartFieldValues[role] = next;
+          this.onFieldChange(role);
+        }
+      } else if (typeof val === 'string' && val === fieldName) {
+        // Clear single-select role if it was the removed field
+        this.chartFieldValues[role] = Array.isArray(val) ? [] : '';
+        this.onFieldChange(role);
+      }
+    }
+  }
+
+  private isFieldUsedAnywhere(fieldName: string): boolean {
+    const roles = Object.keys(this.chartFieldValues || {});
+    for (const role of roles) {
+      const val = this.chartFieldValues[role];
+      if (Array.isArray(val) && val.includes(fieldName)) return true;
+      if (typeof val === 'string' && val === fieldName) return true;
+    }
+    return false;
   }
 
   someColumnsSelected(): boolean {
