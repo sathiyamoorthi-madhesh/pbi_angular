@@ -1,0 +1,56 @@
+<dialog 
+  #dialogElement
+  [attr.aria-labelledby]="'dialog-title'"
+  class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent"
+  (click)="onBackdropClick($event)"
+  (close)="closeDialog()">
+  
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity"></div>
+
+  <!-- Dialog Container -->
+  <div class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+    <!-- Dialog Panel -->
+    <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full {{ getDialogSizeClasses() }}">
+      
+      <!-- Header and Content -->
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          
+          <!-- Icon (if provided) -->
+          <div *ngIf="config.icon" class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-10 {{ getIconBgClasses() }}">
+            <i [class]="getFontAwesomeIcon()"></i>
+          </div>
+
+          <!-- Content -->
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 id="dialog-title" class="text-base font-semibold text-gray-900">
+              {{ config.title }}
+            </h3>
+            <div class="mt-2" *ngIf="config.message">
+              <p class="text-sm text-gray-500">{{ config.message }}</p>
+            </div>
+            
+            <!-- Custom Content Slot -->
+            <div class="mt-4">
+              <ng-content></ng-content>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer with Buttons -->
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 border-t border-gray-200 flex flex-col-reverse sm:flex-row-reverse gap-3">
+        <ng-container *ngFor="let button of config.buttons">
+          <button 
+            type="button"
+            [class]="getButtonClasses(button)"
+            [disabled]="button.disabled"
+            (click)="onButtonClick(button)">
+            {{ button.text }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</dialog>

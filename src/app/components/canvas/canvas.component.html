@@ -414,3 +414,10 @@
         </div>
     </div>
 </div>
+
+<app-dialog
+  [isOpen]="showDialog"
+  [config]="dialogConfig"
+  (dialogClosed)="onDialogClosed()"
+  (buttonClicked)="onDialogButtonClick($event)">
+</app-dialog>

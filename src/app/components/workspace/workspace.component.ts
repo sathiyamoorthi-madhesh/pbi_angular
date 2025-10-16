@@ -5,6 +5,8 @@ import { CoreService } from '../../services/core.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
+import { DialogComponent, DialogConfig, DialogButton } from '../ui-components/dialog/dialog.component';
+import { ToasterService } from '../../services/toaster.service';
 interface Folder {
   id: string;
   name: string;
@@ -25,7 +27,8 @@ interface FileItem {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    DialogComponent
   ],
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.scss']
@@ -54,7 +57,17 @@ export class WorkspaceComponent implements OnInit {
 
   @Output() dataEmitter = new EventEmitter<any>();
 
-  constructor(private coreService: CoreService, private router: Router) { }
+  showDialog: boolean = false;
+  dialogConfig: DialogConfig = {
+    title: '',
+    message: '',
+    buttons: [],
+    size: 'md',
+    closable: true
+  };
+  dialogCallback: (() => void) | null = null;
+
+  constructor(private coreService: CoreService, private router: Router, private toaster: ToasterService) { }
 
   folderproject: any;
   Ondata: any;
@@ -63,6 +76,25 @@ export class WorkspaceComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.projectData();
+  }
+
+  private showCustomDialog(config: DialogConfig, callback?: () => void): void {
+    this.dialogConfig = config;
+    this.dialogCallback = callback || null;
+    this.showDialog = true;
+  }
+
+  onDialogButtonClick(button: DialogButton): void {
+    if (button.action === 'confirm' && this.dialogCallback) {
+      this.dialogCallback();
+    }
+    this.showDialog = false;
+    this.dialogCallback = null;
+  }
+
+  onDialogClosed(): void {
+    this.showDialog = false;
+    this.dialogCallback = null;
   }
 
   loadData() {
@@ -121,7 +153,8 @@ export class WorkspaceComponent implements OnInit {
     if (!name) return;
 
     if (this.folders.some(f => f.name.toLowerCase() === name.toLowerCase())) {
-      Swal.fire("Duplicate", "A folder with this name already exists.", "warning");
+      // Replace Swal.fire with custom dialog
+      this.toaster.warning('A folder with this name already exists.');
       return;
     }
 
@@ -148,20 +181,21 @@ export class WorkspaceComponent implements OnInit {
       ? `Delete "${folder.name}" and its ${folder.files.length} file(s)?`
       : `Delete "${folder.name}"?`;
 
-    Swal.fire({
-      title: "Are you sure?",
-      text: message,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!"
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.folders = this.folders.filter(f => f.id !== folderId);
-        if (this.selectedFolder?.id === folderId) this.selectedFolder = null;
-        this.filteredFolders = [...this.folders];
-        this.storeData();
-        this.showMessage("Folder deleted successfully", "success");
-      }
+    // Replace Swal.fire with custom dialog
+    this.showCustomDialog({
+      title: 'Are you sure?',
+      message: message,
+      icon: { type: 'warning' },
+      buttons: [
+        { text: 'Cancel', type: 'secondary', action: 'close' },
+        { text: 'Yes, delete it!', type: 'danger', action: 'confirm' }
+      ]
+    }, () => {
+      this.folders = this.folders.filter(f => f.id !== folderId);
+      if (this.selectedFolder?.id === folderId) this.selectedFolder = null;
+      this.filteredFolders = [...this.folders];
+      this.storeData();
+      this.toaster.success("Folder deleted successfully");
     });
   }
 
@@ -248,10 +282,10 @@ export class WorkspaceComponent implements OnInit {
 
     this.coreService.savefileArray(dataCopy).subscribe({
       next: () => {
-        this.showMessage("Data saved successfully!", "success");
+        this.toaster.success("Data saved successfully!");
       },
       error: () => {
-        this.showMessage("Failed to save data. Please try again.", "error");
+        this.toaster.error("Failed to save data. Please try again.");
       }
     });
   }
@@ -273,36 +307,35 @@ export class WorkspaceComponent implements OnInit {
     if (!name || !this.selectedFolder) return;
 
     if (this.selectedFolder.files.some((f: any) => f.name.toLowerCase() === name.toLowerCase())) {
-      Swal.fire("Duplicate", "A file with this name already exists in this folder.", "warning");
+      // Replace Swal.fire with custom dialog
+      this.toaster.warning('A file with this name already exists in this folder.');
       return;
     }
 
     const fileToAdd: FileItem = { ...this.newFile, lastModified: new Date() };
     this.selectedFolder.files.push(fileToAdd);
-    // console.log("--------------------------------------------------943502893573093584095--------------------------------",name,this.selectedFolder)
     this.filteredfiles = [...this.selectedFolder.files];
-    // console.log('-----------------------------',this.filteredFolders);
     this.storefileData();
     this.closeCreateForm();
   }
 
   deleteFolderFile(folderId: string, fileName: string) {
     if (!fileName?.trim()) {
-      Swal.fire("Error", "No project name specified to delete.", "error");
+      // Replace Swal.fire with custom dialog
+      this.toaster.error('No project name specified to delete.');
       return;
     }
 
-    Swal.fire({
-      title: "Are you sure?",
-      text: `Do you really want to delete the project "${fileName}"?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then(result => {
-      if (!result.isConfirmed) return;
-
+    // Replace Swal.fire with custom dialog
+    this.showCustomDialog({
+      title: 'Are you sure?',
+      message: `Do you really want to delete the project "${fileName}"?`,
+      icon: { type: 'warning' },
+      buttons: [
+        { text: 'Cancel', type: 'secondary', action: 'close' },
+        { text: 'Yes, delete it!', type: 'danger', action: 'confirm' }
+      ]
+    }, () => {
       this.coreService.deleteItemFile(folderId, fileName).subscribe(
         () => {
           const folder = this.folders.find(f => f.id === folderId);
@@ -315,16 +348,17 @@ export class WorkspaceComponent implements OnInit {
           const allfiledelete = { dataname: fileName, foldername: this.OnFoldername };
 
           this.coreService.deleteTab(allfiledelete).subscribe(
-            () => this.showMessage(`Project "${fileName}" deleted successfully`, "success"),
+            () => this.toaster.success(`Project "${fileName}" deleted successfully`),
             err => {
               console.error("Error deleting project tab:", err);
-              this.showMessage("Folder deleted successfully", "success");
+              this.toaster.success("Folder deleted successfully");  
             }
           );
         },
         err => {
           console.error("Error deleting file:", err);
-          Swal.fire("Error", "Error deleting file. Please try again.", "error");
+          // Replace Swal.fire with custom dialog
+          this.toaster.error('Error deleting file. Please try again.');
         }
       );
     });
@@ -332,47 +366,40 @@ export class WorkspaceComponent implements OnInit {
 
   deleteFolder(folderId: string, folder: Folder) {
     if (folder.files.length === 0) {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "Do you really want to delete this folder?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.coreService.deleteItem(folderId).subscribe(
-            res => {
-              console.log('Folder deleted:', res);
+      // Replace Swal.fire with custom dialog
+      this.showCustomDialog({
+        title: 'Are you sure?',
+        message: 'Do you really want to delete this folder?',
+        icon: { type: 'warning' },
+        buttons: [
+          { text: 'Cancel', type: 'secondary', action: 'close' },
+          { text: 'Yes, delete it!', type: 'danger', action: 'confirm' }
+        ]
+      }, () => {
+        this.coreService.deleteItem(folderId).subscribe(
+          res => {
+            console.log('Folder deleted:', res);
 
-              // ✅ Remove from local state
-              this.folders = this.folders.filter(f => f.id !== folderId);
-              this.filteredFolders = [...this.folders];
+            this.folders = this.folders.filter(f => f.id !== folderId);
+            this.filteredFolders = [...this.folders];
 
-              // ✅ If the deleted folder was selected, clear it
-              if (this.selectedFolder?.id === folderId) {
-                this.selectedFolder = null;
-                this.filteredfiles = [];
-              }
-
-              this.showMessage("Folder deleted successfully", "success");
-            },
-            err => {
-              console.error('Error deleting folder:', err);
-              Swal.fire("Error", "Error deleting folder. Please try again.", "error");
+            if (this.selectedFolder?.id === folderId) {
+              this.selectedFolder = null;
+              this.filteredfiles = [];
             }
-          );
-        } else {
-          this.showMessage("Folder deletion cancelled", "info");
-        }
+
+            this.toaster.success("Folder deleted successfully");
+          },
+          err => {
+            console.error('Error deleting folder:', err);
+            // Replace Swal.fire with custom dialog
+            this.toaster.error('Error deleting folder. Please try again.');
+          }
+        );
       });
     } else {
-      Swal.fire(
-        "Cannot Delete",
-        "This folder contains project files. Please remove them first.",
-        "info"
-      );
+      // Replace Swal.fire with custom dialog
+      this.toaster.info('This folder contains project files. Please remove them first.');
     }
   }
 
@@ -391,11 +418,11 @@ export class WorkspaceComponent implements OnInit {
     const dataCopy = [...this.folders];
     this.coreService.saveArray(dataCopy).subscribe({
       next: () => {
-        this.showMessage("Data saved successfully!", "success");
+        this.toaster.success("Data saved successfully!");
         this.ngOnInit();
       },
       error: () => {
-        this.showMessage("Failed to save data. Please try again.", "error");
+        this.toaster.error("Failed to save data. Please try again.");
       }
     });
   }
@@ -418,6 +445,7 @@ export class WorkspaceComponent implements OnInit {
   }
 
   showMessage(message: string, type: 'success' | 'error' | 'info' | 'warning') {
-    Swal.fire({ text: message, icon: type, timer: 2000, showConfirmButton: false });
+    // Replace Swal.fire with custom dialog for notifications
+    this.toaster.show(message, type);
   }
 }

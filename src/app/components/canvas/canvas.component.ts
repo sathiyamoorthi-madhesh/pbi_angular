@@ -34,6 +34,8 @@ import { MaterialImportsModule } from "../../material.imports";
 import { Subscription } from 'rxjs';
 import { CardComponent } from '../ui-components/card/card.component';
 import { DropdownComponent, DropdownOption, DropdownSelection } from '../ui-components/dropdown/dropdown.component';
+import { DialogComponent, DialogConfig, DialogButton } from '../ui-components/dialog/dialog.component';
+import { ToasterService } from '../../services/toaster.service';
 
 enum ChartMode {
   CustomField = 'CustomField',
@@ -92,7 +94,8 @@ interface ChartEntry {
     TableComponent,
     StackedcolumnComponent,
     MaterialImportsModule,
-    DropdownComponent
+    DropdownComponent,
+    DialogComponent
   ],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss'
@@ -217,7 +220,7 @@ export class CanvasComponent implements OnInit {
   aggregationDropdownOptions: DropdownOption[] = [];
 
   fieldChanges: { title: string, label: { [key: string]: any }[] }[] = [];
-  constructor(private coreservice: CoreService, private snackBar: MatSnackBar, private router: Router) { }
+  constructor(private coreservice: CoreService, private snackBar: MatSnackBar, private router: Router, private toaster: ToasterService) { }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   get currentTab(): Tab | null {
@@ -311,6 +314,33 @@ export class CanvasComponent implements OnInit {
     this.subscriptions.unsubscribe();
   }
 
+  showDialog: boolean = false;
+dialogConfig: DialogConfig = {
+  title: '',
+  message: '',
+  buttons: [],
+  size: 'md',
+  closable: true
+};
+private dialogCallback: (() => void) | null = null;
+
+private showCustomDialog(config: DialogConfig, callback?: () => void): void {
+  this.dialogConfig = config;
+  this.dialogCallback = callback || null;
+  this.showDialog = true;
+}
+
+onDialogButtonClick(button: DialogButton): void {
+  if (button.action === 'confirm' && this.dialogCallback) this.dialogCallback();
+  this.showDialog = false;
+  this.dialogCallback = null;
+}
+
+onDialogClosed(): void {
+  this.showDialog = false;
+  this.dialogCallback = null;
+}
+
   onTabChange(event: MatTabChangeEvent) {
     console.log('------------------', event.tab.textLabel);
   }
@@ -321,6 +351,10 @@ export class CanvasComponent implements OnInit {
 
   toggleSidePanel2() {
     this.sidePanel2Collapsed = !this.sidePanel2Collapsed;
+  }
+
+  showMessage(message: string, type: 'info' | 'success' | 'warning' | 'error') {
+    this.toaster.show(message, type);
   }
 
 
@@ -1572,7 +1606,13 @@ export class CanvasComponent implements OnInit {
     const maxTabs = 50;
 
     if (this.tabs.length >= maxTabs) {
-      alert(`Cannot create more than ${maxTabs} tabs.you can reached maximum of ${maxTabs} tabs.`);
+      this.showCustomDialog({
+        title: 'Limit reached',
+        message: `Cannot create more than ${maxTabs} tabs.`,
+        icon: { type: 'info' },
+        buttons: [{ text: 'OK', type: 'primary', action: 'close' }],
+        size: 'sm'
+      });
       return;
     }
 
@@ -1930,19 +1970,15 @@ export class CanvasComponent implements OnInit {
     }
 
     // Confirmation before saving
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, save it!"
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        this.showMessage('Project Save cancelled', 'info');
-        return;
-      }
+    this.showCustomDialog({
+      title: 'Are you sure?',
+      message: "You won't be able to revert this!",
+      icon: { type: 'warning' },
+      buttons: [
+        { text: 'Cancel', type: 'secondary', action: 'close' },
+        { text: 'Yes, save it!', type: 'primary', action: 'confirm' }
+      ]
+    }, () => {
 
       // Tab handling
       const lastTab = this.tabs.length > 0 ? this.tabs[this.tabs.length - 1] : null;
@@ -1985,7 +2021,7 @@ export class CanvasComponent implements OnInit {
         },
         error: (error) => {
           if (error.name === 'TimeoutError') {
-            alert('Saving timed out after 9 seconds. Please try again.');
+            this.showMessage('Saving timed out after 9 seconds. Please try again.', 'error');
           } else {
             console.error('Error saving/updating tabs:', error);
           }
@@ -1998,14 +2034,7 @@ export class CanvasComponent implements OnInit {
     });
   }
 
-  showMessage(message: string, type: 'info' | 'success' | 'warning' | 'error') {
-    this.snackBar.open(message, 'x ', {
-      duration: 1500,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: [`alert-${type}`, 'alert-close-red', 'alert-margin-top'] // CSS will handle styling
-    });
-  }
+
 
   onCancel() {
     this.tabs = [];
@@ -2125,20 +2154,16 @@ export class CanvasComponent implements OnInit {
       return;
     }
     const closedTab = this.tabs[index];
-    Swal.fire({
+
+    this.showCustomDialog({
       title: `Close "${closedTab.title}"?`,
-      text: "You won't be able to undo this action.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, close it",
-      cancelButtonText: "Cancel"
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        this.showMessage(`Tab "${closedTab.title}" close cancelled.`, 'info');
-        return;
-      }
+      message: "You won't be able to undo this action.",
+      icon: { type: 'warning' },
+      buttons: [
+        { text: 'Cancel', type: 'secondary', action: 'close' },
+        { text: 'Yes, close it', type: 'danger', action: 'confirm' }
+      ]
+    }, () => {
       this.selectedChart = '';
       this.selectchartfunction = false;
 
@@ -2151,14 +2176,12 @@ export class CanvasComponent implements OnInit {
 
       // Re-select tab if needed
       if (this.tabs.length > 0) {
-        // Prefer previous tab if exists, otherwise first tab
         const newIndex = index > 0 ? index - 1 : 0;
         this.currentTabId = this.tabs[newIndex].id;
         this.selectTab(this.currentTabId);
       } else {
         this.currentTabId = null;
       }
-
     });
   }
 
