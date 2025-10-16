@@ -1158,20 +1158,26 @@ export class CanvasComponent implements OnInit {
     // Start from newArr
     this.allFields = this.removeDuplicates(this.newArr || []);
 
-    if (label === 'Filter') {
-      // For filter → include selected field
-      this.allFields = this.removeDuplicates([
-        ...this.allFields,
-        ...(this.selectedFieldss ? [this.selectedFieldss] : []),
-      ]);
-    } else {
+    // if (label === 'Filter') {
+    //   // For filter → include selected field
+    //   this.allFields = this.removeDuplicates([
+    //     ...this.allFields,
+    //     ...(this.selectedFieldss ? [this.selectedFieldss] : []),
+    //   ]);
+    // } else {
       // For other charts → include extracted fields
       const extractedFields = this.extractFieldsForQuery(chartDef.fields, collName);
-      this.allFields = this.removeDuplicates([
+     if(this.allFields){
+
+      this.allFields = [
         ...this.allFields,
         ...extractedFields,
-      ]);
+      ];
+    }else{
+      this.allFields = [...extractedFields]
     }
+    console.log('All Fields for Query:', this.allFields);
+    // }
 
     // ✅ At this point, this.allFields is always deduped and logged
 
@@ -1184,7 +1190,8 @@ export class CanvasComponent implements OnInit {
     }, 200);
 
     /** 🔹 Fetch data from API */
-    this.coreservice.getFilteredData({}, this.allFields, this.limit, this.skip).subscribe({
+    this.coreservice.getFilteredData_Test1({}, this.xValues, this.yValues, this.legendValues[0],aggregationMethod).subscribe({
+    // this.coreservice.getFilteredData({}, this.allFields, this.limit, this.skip).subscribe({
       next: (res) => {
         const data = res.data || [];
 
@@ -1487,7 +1494,7 @@ export class CanvasComponent implements OnInit {
     this.selectFieldtype = [];
   }
 
-  extractFieldsForQuery(fieldKeys: string[], collName: string): string[] {
+ extractFieldsForQuery(fieldKeys: string[], collName: string): string[] {
     const allFields: string[] = [];
     const aggregation = this.getValidAggregation(this.selectedAggregation);
     this.selectFieldtype.push(aggregation);
@@ -1502,9 +1509,10 @@ export class CanvasComponent implements OnInit {
         allFields.push(fullField);
         this.selectFieldtype.push(fullField);
 
-        if (fieldKey === 'x') this.xValues.push(fullField);
-        if (['y', 'y1', 'y2', 'value', 'target', 'trend'].includes(fieldKey)) this.yValues.push(fullField);
-        if (fieldKey === 'legend') this.legendValues.push(fullField);
+        if (fieldKey === 'x' || fieldKey === 'Bar_x_Axis' || fieldKey === 'clusteredcolumn_x_Axis') this.xValues.push(fullField);
+        if (['y', 'y1', 'y2', 'value', 'target', 'trend', 'Bar_y_Axis', 'clusteredcolumn_y_Axis'].includes(fieldKey)) this.yValues.push(fullField);
+        if (fieldKey === 'legend' || fieldKey === 'clusteredcolumn_legend') this.legendValues.push(fullField);
+        console.log(fieldKey,fullField,this.xValues,this.yValues,this.legendValues)
       }
     }
 
