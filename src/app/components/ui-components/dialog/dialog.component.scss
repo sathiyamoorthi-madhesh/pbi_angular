@@ -1,0 +1,71 @@
+// Custom animations for dialog
+dialog {
+    &::backdrop {
+      background-color: rgba(20, 184, 166, 0.2); // teal-500/20
+      backdrop-filter: blur(4px);
+    }
+  }
+  
+  // Animation classes
+  .dialog-enter {
+    animation: dialogEnter 0.3s ease-out;
+  }
+  
+  .dialog-exit {
+    animation: dialogExit 0.2s ease-in;
+  }
+  
+  @keyframes dialogEnter {
+    from {
+      opacity: 0;
+      transform: translateY(1rem) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes dialogExit {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(1rem) scale(0.95);
+    }
+  }
+  
+  // Focus management
+  dialog:focus {
+    outline: none;
+  }
+  
+  // Teal theme enhancements
+  .dialog-panel {
+    border: 1px solid rgb(204, 251, 241); // teal-100
+    box-shadow: 0 25px 50px -12px rgba(20, 184, 166, 0.25); // teal-500 shadow
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 640px) {
+    dialog .sm\:max-w-lg {
+      max-width: 95vw;
+      margin: 1rem;
+    }
+  }
+  
+  // Button hover effects to match your theme
+  .btn-primary {
+    transition: all 0.2s ease-in-out;
+    transform: scale(1);
+  }
+  
+  .btn-primary:hover {
+    transform: scale(1.01);
+  }
+  
+  .btn-primary:active {
+    transform: scale(0.99);
+  }

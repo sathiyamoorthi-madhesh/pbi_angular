@@ -3,13 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CoreService } from '../../services/core.service';
+import { DialogComponent, DialogConfig, DialogButton } from '../ui-components/dialog/dialog.component';
 
 import { MaterialImportsModule } from "../../material.imports";
 import { RouterModule } from '@angular/router';
+import { ToasterService } from '../../services/toaster.service';
 
 @Component({
   selector: 'app-relationships',
-  imports: [FormsModule, CommonModule, RouterModule, MaterialImportsModule],
+  imports: [FormsModule, CommonModule, RouterModule, MaterialImportsModule, DialogComponent],
   templateUrl: './relationships.component.html',
   styleUrl: './relationships.component.scss'
 })
@@ -34,7 +36,17 @@ export class RelationshipsComponent implements OnInit {
   isTargetCollectionDropdownOpen = false;
   isTargetFieldDropdownOpen = false;
 
-  constructor(private coreService: CoreService) {}
+  showDialog: boolean = false;
+  dialogConfig: DialogConfig = {
+    title: '',
+    message: '',
+    buttons: [],
+    size: 'md',
+    closable: true
+  };
+  private dialogCallback: (() => void) | null = null;
+
+  constructor(private coreService: CoreService, private toaster: ToasterService) {}
 
   ngOnInit(): void {
     this.loadCollections();
@@ -50,6 +62,27 @@ export class RelationshipsComponent implements OnInit {
     this.isSourceFieldDropdownOpen = false;
     this.isTargetCollectionDropdownOpen = false;
     this.isTargetFieldDropdownOpen = false;
+  }
+
+  private showCustomDialog(config: DialogConfig, callback?: () => void): void {
+    this.dialogConfig = config;
+    this.dialogCallback = callback || null;
+    this.showDialog = true;
+  }
+
+  onDialogButtonClick(button: DialogButton): void {
+    if (button.action === 'confirm' && this.dialogCallback) this.dialogCallback();
+    this.showDialog = false;
+    this.dialogCallback = null;
+  }
+
+  onDialogClosed(): void {
+    this.showDialog = false;
+    this.dialogCallback = null;
+  }
+
+  private showMessage(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') {
+    this.toaster.show(message, type); 
   }
 
   loadCollections(): void {
@@ -69,7 +102,7 @@ export class RelationshipsComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error loading collections:', err);
-        alert('Failed to load collections');
+        this.showMessage('Failed to load collections', 'error');
       }
     });
   }
@@ -184,38 +217,47 @@ export class RelationshipsComponent implements OnInit {
     );
 
     if (alreadyExists) {
-      alert('⚠️ This relationship already exists (even if reversed).');
+      this.showMessage('This relationship already exists (even if reversed).', 'warning');
       return;
     }
 
     this.coreService.saveRelationship(newRel).subscribe({
       next: () => {
-        alert('Relationship saved!');
+        this.showMessage('Relationship saved!', 'success');
         this.loadRelationships();
         this.resetForm();
       },
       error: (err) => {
         console.error('Failed to save relationship:', err);
-        alert('Failed to save relationship');
+        this.showMessage('Failed to save relationship', 'error');
       }
     });
   } else {
-    alert('Please select all fields and collections correctly.');
+    this.showMessage('Please select all fields and collections correctly.','info');
   }
 }
 
 
   removeRelationship(index: number, id: string): void {
-    
-    this.coreService.deleteRelationship(id).subscribe({
-      next: () => {
-        if (!confirm('Are you sure you want to delete this relationship?')) return;
-        this.relationships.splice(index, 1);
-      },
-      error: (err) => {
-        console.error('Delete failed:', err);
-        alert('Delete failed');
-      }
+    this.showCustomDialog({
+      title: 'Are you sure?',
+      message: 'Do you really want to delete this relationship?',
+      icon: { type: 'warning' },
+      buttons: [
+        { text: 'Cancel', type: 'secondary', action: 'close' },
+        { text: 'Yes, delete it!', type: 'danger', action: 'confirm' }
+      ]
+    }, () => {
+      this.coreService.deleteRelationship(id).subscribe({
+        next: () => {
+          this.relationships.splice(index, 1);
+          this.showMessage('Relationship deleted successfully', 'success');
+        },
+        error: (err) => {
+          console.error('Delete failed:', err);
+          this.showMessage('Delete failed', 'error');
+        }
+      });
     });
   }
 
@@ -287,12 +329,12 @@ submitCollections() {
   if (added) {
     this.itaddcollection = true;
   } else {
-    alert('Selected fields are already added.');
+    this.showMessage('Selected fields are already added.','info');
   }
 
   this.selectedFields = [];
   if (!this.collectionList || this.collectionList.length === 0) {
-    alert('Please select at least one collection.');
+    this.showMessage('Please select at least one collection.','info');
     return;
   }
   
@@ -304,16 +346,15 @@ submitCollections() {
     newCollectionNames.every((val, i) => val === existingCollectionNames[i]);
 
   if (isSame) {
-    alert('No changes detected.');
+    this.showMessage('No changes detected.','info');
     this.collectionNames = newCollectionNames;
-  
     this.collectionList = [];
     return;
   }
 this.selectedFields=this.collectionNames;
 this.coreService.postCollectionNames(newCollectionNames).subscribe(
   (res) => {
-    // alert('Collections added successfully!');
+    this.showMessage('Collections added successfully!','success');
       // console.log('Successfully submitted collections', res);
 
       this.collectionNames = newCollectionNames;
@@ -322,9 +363,7 @@ this.coreService.postCollectionNames(newCollectionNames).subscribe(
     },
     (err) => {
       console.error('Error submitting collections', err);
-      alert('Failed to submit collections. Please try again.');
-
-  
+      this.showMessage('Failed to submit collections. Please try again.','error');
       this.collectionList = [];
     }
   );
